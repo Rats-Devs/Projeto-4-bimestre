@@ -1,0 +1,496 @@
+O projeto tem 4 coisas:
+Site de vendas(HTML, CSS e JavaScript) OK
+App (React-native) OK
+DashBoard a fazer
+API C#(Recebe os pedidos, valida os dados e executa as regras do sistema) OK
+MySQL (armazena os dados) OK
+
+Se alterar na Dashboard, o site e o app poderão buscar a versão alterada do filme
+
+As telas consultam a API novamente para atualizar.
+
+Como Descobrir se a API está acessível:
+
+Conceito 1: oq é um endereço de API?
+
+Num projeto ASP.NET Core, ele inicia normalmente um servidor num endereço parecido com isso:
+http://localhost:5000
+
+Tem três partes.
+
+http:// protocolo http usado
+localhost A propria maquina que o programa está rodando
+:5000 Porta que o servidos está escutando
+
+Uma rota acrescenta um caminho ao endereço, exemplo:
+
+http://localhost:5000/api/Filme
+
+conceito 2: como testar?
+
+dotnet run no terminal
+http://localhost:5160/swagger <- abre o Swagger UI para testar a API (depende da sua porta do localhost, nesse caso é 5160)
+
+Utilizando o Swagger UI. Ele permite enviar requisições à API e visualizar as respostas dela.
+
+
+No Swagger UI vc clica em Execute e envia a requisição para a API
+No site, qm vai fazer isso é o JavaScript
+
+JavaScript executa o comando fetch()
+API recebe o GET e consulta os filmes
+MySQL devolve os dados armazenados
+
+No JavaScript temos uma função chamada fetch(), ela é usada para fazer requisições HTTP
+
+fetch("ENDERECO_DA_SUA_API") <- envia uma requisição para o endereço informado. Será um GET pq não foi especificado
+    .then(resposta => resposta.json()) <- API retorna uma resposta HTTP. Essa linha executa o resposta.json que interpreta o JSOn e transforma em valores JavaScript
+    .then(dados => { <- recebe os dados já interpretados
+        console.log(dados); <- Exibe os dados no console
+    });
+
+.then() é utilizado para executar uma etapa depois de uma operação assíncrona
+
+Vai enviar a solicitação, a API vai receber e consultar o Banco de Dados, a API vai devolver os filmes e o JavaScript recebe e vai utilizar os dados.
+O JavaScript vai poder continuar executando outras tarefas enquanto aguarda, sendo um comportamento assíncrono
+
+Diferença JSON, objeto e array
+
+Objeto:
+um objeto serve para agrupar as informações relacionadas
+
+const filme = {
+    titulo: "Logan",
+    duracao: 137
+};
+
+Armazenamos os dados em um objeto chamado filme, que possui duas propriedades.
+Propriedades: titulo e duracao.
+Tipos: titulo é do tipo string e duracao é do tipo number
+seus valores são Logan e 137.
+
+Dá para acessar os valores dessas propriedades usando o nomeDoObjeto.nomeDaPropriedade
+
+console.log(filme.titulo);
+console.log(filme.duracao);
+
+a resposta será Logan e 137
+
+Array:
+Array´serve para armazenar vários valores em uma única lista.
+
+const filmes = ["Logan", "Avatar", "Interestelar"];
+
+filmes é uma variável que guarda um array de 3 elementos
+
+O objeto guarda informações por propriedades (titulo, duracao etc)
+O array guarda vários elementos em uma lista
+
+Num array cada filme ocupa uma posição na lista. Em JavaScript, a contagem começa em ZERO
+por exemplo:
+const filmes = ["Logan", "Avatar", "Interestelar"]; logan é a posição 0, avatar é a posição 1 e interestelar é a posição 2.
+
+Para acessar o segundo filme da nossa lista:
+console.log(filmes[1]);
+
+Vai acessar o elemento de posição 1 do array filmes
+
+const filmes = [
+    { titulo: "Logan", duracao: 137 },
+    { titulo: "Avatar", duracao: 162 }
+];
+
+Temos um array chamado filmes, que guarda objetos com cada objeto possuindo propriedades de titulo e duracao
+
+Existem 2 objetos, nas posições 0 e 1
+
+para mostrar o titulo do segundo filme do console:
+console.log(filmes[1].titulo)
+filmes[1] acessa o segundo objeto (posição 2)
+.titulo acessa o titulo do objeto
+
+fetch("ENDERECO_DA_API")
+    .then(resposta => resposta.json())
+    .then(filmes => {
+        console.log(filmes[1].titulo);
+    });
+
+A API devolve uma lista com Logan na posição 0 e Avatar na posição 1.
+
+no console vai aparecer "Avatar".
+
+filmes[1] vai acessar o objeto do Avatar.
+
+.titulo vai acessar a propriedade titulo desse objeto.
+
+console.log() vai exibir o valor "Avatar".
+
+o fetch() faz uma solicitação à API em C#.
+o fetch() não recebe a lista de filmes diretamente. Primeiro, ele
+recebe uma resposta HTTP. Depois resposta.json() interpreta essa resposta.
+
+O corpo da resposta é interpretado como JSON, produzindo valores que o JavaScript pode usar.
+
+---------------------------------
+{
+  "titulo": "Logan",
+  "duracao": 137
+}
+
+.then(resposta => resposta.json())
+.then(dados => {
+    console.log(dados.duracao);
+});
+
+resposta.json() interpreta o corpo da resposta.
+dados recebe o resultado dessa interpretação.
+dados.duracao acessa a propriedade duracao.
+console.log() exibe 137.
+
+----------------------------------
+
+ForEach:
+
+dados.forEach(filme => {
+
+dados é o array com os filmes.
+.forEach() percorre CADA elemento do array.
+filme é o nome da variável que recebe o elemento atual em cada repetição.
+=> faz parte da sintaxe da função que será executada para cada elemento.
+
+conectando ao fetch() da API
+
+fetch("ENDERECO_DA_API")
+    .then(resposta => resposta.json())
+    .then(dados => {
+        dados.forEach(filme => {
+            console.log(filme.titulo);
+        });
+    });
+
+fetch() faz a solicitação HTTP para a API
+resposta.json lê o corpo da resposta e interpreta o JSON como dados JavaScript
+dados.forEach() percorre CADA elemento do array
+console.log(filme.titulo) mostra o titulo de cada filme, sendo (filme) o objeto atual da repetiçã
+
+por que colocamos o forEach dentro do segundo .then(), em vez de colocá-lo diretamente depois do fetch()?
+R: precisamos interpretar a resposta como JSON para obter os dados JavaScript e, depois, percorrer o array de filmes.
+
+No JavaScript, o sinal + pode fazer duas coisas: somar números ou juntar textos.
+
+console.log(10 + 5);
+e
+console.log("Olá " + "Lucas");
+
+console.log(filme.titulo + " - " + filme.duracao + " minutos");
+
+O JavaScript junta tudo e mostra:
+
+Logan - 137 minutos
+
+const filmes = [
+    { titulo: "Logan", duracao: 137 },
+    { titulo: "Avatar", duracao: 162 },
+    { titulo: "Interestelar", duracao: 169 }
+];
+
+filmes.forEach(filme => {
+    if (filme.duracao > 150) {
+        console.log(filme.titulo);
+    }
+});
+
+aparecerá Avatar e Interestelar, são os unicos que respeitam a condição do if (ter duracao maior que 150)
+
+Logan: 137 > 150 → falso.
+Avatar: 162 > 150 → verdadeiro.
+Interestelar: 169 > 150 → verdadeiro.
+
+REVISÃO:
+
+1. Objetos e propriedades
+
+um objeto agrupa informações
+
+const filme = {
+    titulo: "Logan",
+    duracao: 137
+};
+
+filme é a variável 
+titulo e duracao são propriedades.
+"Logan" é uma string (texto).
+137 é um number (número).
+
+Para acessar uma propriedade:
+
+console.log(filme.titulo);  -> Logan
+console.log(filme.duracao); -> 137
+
+2. Arrays
+
+Um array armazena vários elementos em uma lista. Esses elementos podem ser objetos.
+
+const filmes = [
+    { titulo: "Logan", duracao: 137 },
+    { titulo: "Avatar", duracao: 162 }
+];
+
+começa em zero:
+
+filmes[0].titulo -> Logan
+filmes[1].titulo -> Avatar
+
+primeiro acessamos a posição do array e depois a propriedade do objeto.
+
+3. fetch() e API
+O fetch() faz uma requisição HTTP para uma API.
+
+fetch("ENDERECO_DA_API")
+    .then(resposta => resposta.json())
+    .then(dados => {
+        console.log(dados);
+    });
+
+fetch() envia a requisição.
+resposta representa a resposta HTTP recebida.
+resposta.json() lê o corpo da resposta e interpreta o JSON como dados JavaScript.
+dados recebe o resultado dessa interpretação.
+
+4. forEach()
+
+forEach() percorre elementos de um array, executando o codigo para cada elemento
+
+filmes.forEach(filme => {
+    console.log(filme.titulo);
+});
+
+filmes é o array.
+forEach() percorre seus elementos.
+filme representa o elemento atual em cada repetição.
+filme.titulo acessa o título desse objeto.
+
+5. Sinal de +
+
+No JavaScript, o sinal + pode fazer duas coisas: somar números ou juntar textos.
+
+console.log(10 + 5);
+e
+console.log("Olá " + "Lucas");
+
+console.log(filme.titulo + " - " + filme.duracao + " minutos");
+
+O JavaScript junta tudo e mostra:
+
+Logan - 137 minutos
+
+6. if e condições
+O if executa o código quando uma condição é verdadeira
+
+if (filme.duracao > 150) {
+    console.log(filme.titulo);
+}
+
+O operador > é “maior que”.
+
+pode combinar forEach() e if para percorrer todos os filmes e mostrar apenas os que atendem a condição
+filmes.forEach(filme => {
+    if (filme.duracao > 150) {
+        console.log(filme.titulo);
+    }
+});
+
+começando as alterações:
+adicionei URL_IMAGEM, no MySQL(coluna URL_IMAGEM), na model(propriedade UrlImagem), na request(adicionei o campo UrlImagem) e estou trocando na controller.
+
+string? urlImagem = reader.IsDBNull(reader.GetOrdinal("URL_IMAGEM"))
+    ? null
+    : reader.GetString("URL_IMAGEM");
+
+reader.GetOrdinal("URL_IMAGEM"): obtém a posição da coluna URL_IMAGEM no resultado da consulta
+reader.IsDBNull(...): verifica se o valor dessa coluna é NULL
+? null : reader.GetString(...): é o operador ternário, uma forma compacta de escrever um if/else
+
+Se a coluna estiver NULL, guardar null na variável.
+Caso contrário, ler o texto da URL com GetString().
+
+adicionei a string? urlImagem tanto no GET e no GetByID
+
+ainda na controller de filme, no método POST
+adicionei no insert into filmes isso -> URL_IMAGEM
+adicionei no values isso -> @URL_IMAGEM
+nos commands parameters adicionei:
+
+command.Parameters.AddWithValue("@URL_IMAGEM", (object?)request.UrlImagem ?? DBNull.Value);
+
+request.UrlImagem <- acessa a URL enviada da requisição, que o FilmeRequest recebe
+AddWithValue(): associa o valor ao parâmetro SQL @URL_IMAGEM
+DBNull.Value: representa um valor SQL null no banco de dados
+??: se o valor à esquerda for null, usa o valor à direita(DBNull.Value)
+
+ainda na controller de filme, no método PUT
+em:
+SET TITULO = @TITULO,
+CLASSIFICACAO_IDADE = @CLASSIFICACAO_IDADE,
+SINOPSE = @SINOPSE,
+GENERO = @GENERO,
+DURACAO = @DURACAO
+
+adicionei URL_IMAGEM = @URL_IMAGEM
+
+tenho que fazer isso pq se não adicionarmos URL_IMAGEM = @URL_IMAGEM, o PUT atualizará o titulo, classifacacao, 
+sinopse, genero e duracao, mas não atualizará a imagem
+
+nos commands parameters adicionei:
+
+command.Parameters.AddWithValue("@URL_IMAGEM", (object?)request.UrlImagem ?? DBNull.Value);
+
+depois de adicionar tudo isso, fui no terminal, dei dotnet build, dotnet run e fui no swagger UI testar.
+testei o POST
+testei o GET
+testei o PUT
+testei no GETbyID
+
+POST: cadastrou um filme com URL.
+GET: listou os filmes e suas URLs.
+PUT: atualizou os dados e a URL.
+GET by ID: confirmou a URL atualizada do filme.
+
+todos os testes foram bem sucedidos, confirmando que a API consegue gravar
+e recuperar a URL da imagem
+
+quando a dashboard enviar uma nova URL no PUT 
+a parte do backend que associa essa URL ao parâmetro @URL_IMAGEM do comando SQL é
+command.Parameters.AddWithValue(...) usando request.UrlImagem.
+
+Para o site buscar os filmes da API, precisamos de duas coisas:
+CORS: permite que o navegador faça as requisições do site para a API, que usa outra origem
+Servidor local para o site: em vez de abrir o HTML vamos servir localmente. Isso evita problemas de
+origem nas requisições
+
+no Program.cs adicionei:
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("SiteCinemax", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+1: como nosso projeto funciona?
+temos 3 partes principais na comunicação:
+
+Site Cinemax(front-end) <- exibe os filmes e envia requisições
+        ↓↑
+requisições HTTP e respostas JSON
+
+API em C# <- recebe as requisições e executa a lógica
+        ↓↑
+Consultas SQL
+
+MySQL <- armazena filmes, usuários e ingressos
+
+2: O que é uma origem (origin)?
+
+para entender CORS precisa-se entender o conceito de origem
+uma origem é composta por 3 elementos:
+-Protocolo: http ou https
+-Host: domínio ou endereço, como localhost
+-Porta: número usado para acessar o serviço
+
+3: O que é CORS?
+CORS significa Cross-Origin Resource SHaring, compartilhamento de recursos
+entre origens diferentes
+
+O CORS é um mecanismo de segurança dos navegadores. Controla se um site pode
+ler respostas de uma API que está em outra origem
+
+O JavaScript do Cinemax solicita os filmes à API
+A API recebe a solicitação e pode processá-la
+O navegador verifica se a resposta pode ser compartilhada com a origem do site
+Se a API não autorizar essa origem por meio do CORS, o navegador pode bloquear o acesso do JavaScript à resposta
+
+o CORS não conecta a API ao MySQL e não substitui autenticação. Ele Controla
+o compartilhamento de respostas entre origens no navegador
+
+4:
+no program.cs:
+builder.Services.AddControllers(); <- registra os recursos necessários para
+a API trabalhar junto das controllers
+
+embaixo a configuração dos CORS:
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("SiteCinemax", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+explicação
+↓
+
+builder.Services.AddCors(options =>
+    builder: objeto que prepara a aplicação antes da construção
+    services: coleção dos serviços que a aplicação vai utilizar
+    addCors: registra os serviços e confugirações necessárias para trabalhar com CORS
+
+options => 
+    é uma lambda(função anonima usada para criar árvores de expressão de forma rápida e limpa) do C#
+    ela permite passar uma função como argumento. Está fornecendo instruções para configurar o CORS
+
+    O parâmetro options representa as opções de configuração do CORS. 
+
+{
+    options.AddPolicy("SiteCinemax", policy =>
+        AddPolicy cria uma política de CORS com o nome SiteCinemax
+        uma política é um conjunto de regras que determina quais origens, headers e métodos serão permitidos
+    {
+        policy
+                o segundo parâmetro é outra lambda. policy representa a politica que estamos configurando
+            .AllowAnyOrigin()
+                permite que qualquer origem seja aceita por essa política
+            .AllowAnyHeader()
+                permite diferentes headers(cabeçalhos) HTTP nas requisições que seguem a política
+            .AllowAnyMethod();
+                Permite os métodos HTTP:
+                -GET: consultar dados.
+                -POST: cadastrar dados.
+                -PUT: atualizar dados.
+                -DELETE: excluir dados.          
+    });
+});
+
+5:existem duas etapas e por que?
+
+primeira etapa registra e configura a política
+    builder.Services.AddCors(...); <- define as regras e damos o nome SiteCinemax à política
+
+segunda etapa ativa a política na aplicação
+    quando a aplicação já estiver sendo construida essa linha será adicionada depois. Ela faz com que
+    a política seja aplicada no processamento das requisições
+
+6: oq o CORS não resolve?
+
+mesmo com o CORS configurado, podemos encontrar outros problemas:
+a API não está em execução
+endedreço ou porta da API estão incorretos
+URL da imagem nao existe
+etc.
+
+ainda no program.cs embaixo de app.UseHttpsRedirection();
+adicionei:
+app.UseCors("SiteCinemax");
+
+colocamos aqui pq o
+UseHttpsRedirection() trata o redirecionamento para HTTPS.
+UseCors("SiteCinemax") aplica a política de CORS que configuramos.
+UseAuthorization() trata a autorização das requisições.

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro | Cinemax</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+<header>
+  <div class="alinhar-nav">
+
+    <h1 class="logo">CINEMAX</h1>
+
+    <nav>
+      <ul>
+        <li><a href="principal.html">Inicio</a></li>
+        <li>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+</header>
+
+<div class="fundo"></div>
+
+<div class="alinhar">
+
+    <h1 class="logo">CINEMAX</h1>
+
+    <div class="box">
+        <h2>Criar conta</h2>
+
+        <form id="formCadastro">
+
+            <div class="input-grupo">
+                <input type="text" name="nome" required>
+                <label>Nome</label>
+            </div>
+
+            <div class="input-grupo">
+                <input type="email" name="email" required>
+                <label>Email</label>
+            </div>
+
+            <div class="input-grupo">
+                <input type="password" name="senha" id="senha" required>
+                <label>Senha</label>
+            </div>
+
+            <div class="input-grupo">
+                <input type="password" id="confirmarSenha" required>
+                <label>Confirmar senha</label>
+            </div>
+
+            <button type="submit" class="botao">Cadastrar</button>
+
+            <p id="erro" class="erro"></p>
+
+        </form>
+    </div>
+
+</div>
+    <footer>
+        <p>&copy; 2026 Cinemax. Todos os direitos reservados.</p>
+    </footer>
+<script src="login.js"></script>
+</body>
+</html>

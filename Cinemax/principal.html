@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sekuya&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet">
+
+    <title>Cinemax</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="alinhar-nav">
+
+    <h1 class="logo">CINEMAX</h1>
+
+    <nav>
+      <ul>
+        <li><a href="principal.html">Inicio</a></li>
+        <li><a href="#filmes">Filmes</a></li>
+        <li>
+          <a href="login.html">
+            <button class="login">
+                    <svg class="svgIcon" viewBox="0 0 448 512" xmlns="http://w3.org">
+                        <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path>
+                    </svg>
+            </button>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+</header>
+
+<section class="banner" id="banner">
+    <div class="banner-conteudo">
+        <h1 id="banner-titulo">Avatar</h1>
+        <button id="banner-botao">Ver filme</button>
+    </div>
+</section>
+
+<section class="filmes" id="filmes">
+    <h2 class="cartaz">Filmes em cartaz</h2>
+<div class="cinema">
+    <div class="carrossel-alinhar">
+        <div class="carrossel-alinhar">
+        <button class="seta-esquerda" onclick="scrollCarrossel(-1)">❮</button>
+            <div class="carrossel" id="carrossel">
+
+                <a href="avatar.html">
+                    <img src="https://img.elo7.com.br/product/zoom/46B92A8/big-poster-filme-avatar-o-caminho-da-agua-90x60-cm-lo004-poster-nerd.jpg">
+                </a>
+
+                <a href="batman.html">
+                    <img src="https://acdn-us.mitiendanube.com/stores/004/687/740/products/pos-01453-c769aa68ceb77bc76117181325192091-1024-1024.webp">
+                </a>
+
+                <a href="starwars.html">
+                    <img src="https://ingresso-a.akamaihd.net/img/cinema/cartaz/22419-cartaz.jpg">
+                </a>
+
+                <a href="harry.html">
+                    <img src="https://cdn.cineart.com.br/vibezz_93220225.jpg">
+                </a>
+
+                <a href="lilo.html">
+                    <img src="https://upload.wikimedia.org/wikipedia/pt/thumb/8/89/Lilo_%26_Stitch.webp/330px-Lilo_%26_Stitch.webp.png">
+                </a>
+
+                <a href="avengers.html">
+                    <img src="https://br.web.img3.acsta.net/pictures/19/04/26/17/30/2428965.jpg">
+                </a>
+
+                <a href="spider.html">
+                    <img src="https://www.papodecinema.com.br/wp-content/uploads/2012/07/20181114-oespetacularhomemaranha.webp">
+                </a>
+
+                <a href="cars.html">
+                    <img src="https://upload.wikimedia.org/wikipedia/pt/7/7e/Carros_2_P%C3%B4ster.jpg">
+                </a>
+
+                <a href="sonic.html">
+                    <img src="https://i0.wp.com/cloud.estacaonerd.com/wp-content/uploads/2020/01/06210946/unnamed_-_2019-12-05T154002.634.jpg?resize=1013%2C1500&ssl=1">
+                </a>
+
+                <a href="superman.html">
+                    <img src="https://ingresso-a.akamaihd.net/b2b/production/uploads/articles-content/28b754cf-01f9-438b-a446-f3ccb5617d47.png">
+                </a>
+
+                <a href="quarteto.html">
+                    <img src="https://shoppingtotal.com.br/wp-content/uploads/2025/07/4-fantastico.webp">
+                </a>
+
+                <a href="coraline.html">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYzU1YzEwOTEtY2IzNC00ODBhLWEwZTYtMzNmZDdjODBkMTU3XkEyXkFqcGc@._V1_.jpg">
+                </a>
+</div>
+            <button class="seta-direita" onclick="scrollCarrossel(1)">❯</button>
+        </div>
+    </div>
+</div>
+</section>
+    <footer>
+        <p>&copy; 2026 Cinemax. Todos os direitos reservados.</p>
+    </footer>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+*{
+    text-decoration: none;
+}
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background: radial-gradient(
+        circle at 30% 20%,
+        rgba(59,130,246,0.15),
+        transparent 40%
+    ),
+    linear-gradient(
+        180deg,
+        #020617,
+        #0f172a,
+        #020617
+    );
+
+    color: white;
+    overflow: hidden;
+}
+
+h1 {
+    color: #3b82f6;
+}
+
+/*NavBar*/
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
+
+.alinhar-nav {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+header {
+    font-family: "Cinzel", serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 80px;
+    background: rgba(10, 20, 40, 0.6);
+    backdrop-filter: blur(10px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 1px;
+
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(59,130,246,0.6),
+        transparent
+    );
+}
+
+.logo {
+    font-family: "Cinzel", serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 2px;
+
+    background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    cursor: pointer;
+    transition: 0.3s;
+    float: left;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 15px rgba(59,130,246,0.6);
+}
+
+nav {
+  float: right;
+}
+
+nav h1 {
+    font-size: 22px;
+    color: #3b82f6;
+    letter-spacing: 2px;
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+nav li {
+  display: inline-block;
+  margin-left: 70px;
+  padding-top: 2px;
+
+  position: relative;
+}
+
+nav a {
+    color: #e2e8f0;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+    position: relative;
+    transition: 0.3s;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background: #3b82f6;
+    transition: 0.3s;
+}
+nav a:hover {
+  color: #ffffff;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background: #3b82f6;
+    transition: 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+
+/*fundo*/
+.fundo {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.644),
+        rgba(0, 0, 0, 0.600)
+    ),
+    url("https://i0.wp.com/gzhstories.clicrbs.com.br/wp-content/uploads/2022/04/Nick-Julia-stock.jpg?fit=4743%2C3162&ssl=1");
+
+    background-size: cover;
+    background-position: center;
+
+    z-index: -1;
+}
+
+/*alinhar*/
+.alinhar {
+    height: 900px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/*logo*/
+.logo {
+    font-family: "Cinzel", serif;
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 2px;
+
+    background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    cursor: pointer;
+    transition: 0.3s;
+    float: left;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 15px rgba(59,130,246,0.6);
+}
+
+/*box*/
+.box {
+    background: rgba(0,0,0,0.6);
+    padding: 40px;
+    border-radius: 15px;
+    width: 340px;
+
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+}
+
+/*input*/
+.input-grupo {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.input-grupo input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    outline: none;
+
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.input-grupo label {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    color: #aaa;
+    transition: 0.3s;
+}
+
+.input-grupo input:focus + label,
+.input-grupo input:valid + label {
+    top: -10px;
+    font-size: 12px;
+    color: #3b82f6;
+}
+
+/*botao*/
+.botao {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.botao:hover {
+    transform: scale(1.05);
+}
+
+.erro {
+    margin-top: 10px;
+    color: #ef4444;
+    font-size: 14px;
+    text-align: center;
+}
+
+footer {
+    padding: 25px;
+    display: flex;
+    justify-content: center;
+    font-size: 15px;
+    color: #aaaaaa;
+    position: relative;
+}

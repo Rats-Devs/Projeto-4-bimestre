@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+    <title>Star Wars | Cinemax</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header>
+  <div class="alinhar-nav">
+
+    <h1 class="logo">CINEMAX</h1>
+
+    <nav>
+      <ul>
+        <li><a href="principal.html">Inicio</a></li>
+        <li>
+          <a href="login.html">
+            <button class="login">
+                    <svg class="svgIcon" viewBox="0 0 448 512" xmlns="http://w3.org">
+                        <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path>
+                    </svg>
+            </button>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+</header>
+<div class="movie">
+    <div class="info">
+
+        <img src="https://ingresso-a.akamaihd.net/img/cinema/cartaz/22419-cartaz.jpg" class="poster">
+
+        <div class="sinopse">
+
+            <h2>Sinopse</h2>
+
+            <p>
+                Com o retorno do Imperador Palpatine, a Resistência toma a frente da batalha. Treinando para ser uma completa Jedi, Rey se encontra em conflito com passado e futuro, e teme pelas respostas que pode conseguir com Kylo Ren.
+            </p>
+
+            <div class="info-filme">
+                <div class="classificacao-12">12</div>
+
+                <span class="badge">2h 42m</span>
+                <span class="badge">Ficção científica</span>
+                <span class="badge">Aventura</span>
+                <span class="badge">James Cameron</span>
+                <span class="badge">2009</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="horarios">
+    <h2>Horários</h2>
+
+        <div class="sessoes">
+        <button class="sessao">14:00</button>
+        <button class="sessao">17:30</button>
+        <button class="sessao">21:00</button>
+        </div>
+    </div>
+</div>
+
+<a href="principal.html">
+    <button class="ingresso">Comprar ingresso</button>
+</a>
+    <footer>
+        <p>&copy; 2026 Cinemax. Todos os direitos reservados.</p>
+    </footer>
+<script>
+    const sessoes = document.querySelectorAll(".sessao")
+    sessoes.forEach(botao => {
+    botao.addEventListener("click", () => {
+    sessoes.forEach(b => b.classList.remove("ativa"))
+    botao.classList.add("ativa")
+})
+})
+</script>
+</body>
+</html>
