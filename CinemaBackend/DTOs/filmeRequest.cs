@@ -6,5 +6,7 @@ public record FilmeRequest(
     string Sinopse,
     string Genero,
     int Duracao,
-    string? UrlImagem
+    string? UrlImagem,
+    string Diretor,
+    int AnoLancamento
 );

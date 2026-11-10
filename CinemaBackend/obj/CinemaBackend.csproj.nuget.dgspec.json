@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\2° Ano\\Base Técnica\\Alexandre\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj": {}
+    "C:\\Users\\lucas\\Desktop\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj": {}
   },
   "projects": {
-    "D:\\2° Ano\\Base Técnica\\Alexandre\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj": {
+    "C:\\Users\\lucas\\Desktop\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\2° Ano\\Base Técnica\\Alexandre\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj",
+        "projectUniqueName": "C:\\Users\\lucas\\Desktop\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj",
         "projectName": "CinemaBackend",
-        "projectPath": "D:\\2° Ano\\Base Técnica\\Alexandre\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj",
+        "projectPath": "C:\\Users\\lucas\\Desktop\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj",
         "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
-        "outputPath": "D:\\2° Ano\\Base Técnica\\Alexandre\\Projeto 4 BIMESTRE\\CinemaBackend\\obj\\",
+        "outputPath": "C:\\Users\\lucas\\Desktop\\Projeto 4 BIMESTRE\\CinemaBackend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

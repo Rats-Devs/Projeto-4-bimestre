@@ -1,0 +1,42 @@
+o fetch vai buscar a lista de filmes na API e trazer os filmes para o JavaScript, antes de alterar o site
+
+fetch("http://localhost:5160/api/Filme")
+O fetch() faz a requisição HTTP para o endereço da API. está pedindo a lista de filmes
+
+fetch() solicita os filmes à API
+a API vai no MySQL e devolve os dados em JSON
+JavaScript recebe esses dados
+depois, os dados são usados para montar o catálogo de filmes
+
+coloquei no final de script.js:
+
+fetch("http://localhost:5160/api/Filme") <- solicita os filmes à API
+    .then(resposta => resposta.json()) <- converte os dados para dados que o JavaScript entende
+    .then(dados => { <- recebe os dados já convertidos
+        console.log(dados); <- exibe a lista
+    });
+
+no console do navegador agora aparece o array de teste:
+
+Array(2) 
+0: {idFilme: 3, titulo: 'Interestelar', classificacaoIdade: 10, sinopse: 'Um grupo de astronautas viaja pelo espaço em busca de um novo lar para a humanidade.', genero: 'Ficção Científica', …}
+1: {idFilme: 4, titulo: 'Filme de Teste', classificacaoIdade: 12, sinopse: 'Teste de atualização da imagem.', genero: 'Aventura', …}
+
+alterando e deixando assim:
+fetch("http://localhost:5160/api/Filme")
+    .then(resposta => resposta.json())
+    .then(dados => {
+        dados.forEach(filme => {
+            console.log(filme.titulo);
+        });
+    });
+
+agora aparecem apenas
+
+Interestelar
+Filme de Teste
+
+pq o JavaScript percorre o array e mostra o titulo de cada filme no console
+
+arrumei o banco de dados e o backend adicionei os campos diretor e ano de lançamento
+cadastrei todos os filmes no banco de dados

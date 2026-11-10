@@ -22,17 +22,17 @@ public class FilmeController : ControllerBase{
         string connectionString =
             configuration.GetConnectionString("DefaultConnection")!;/*Instânciando e conectando o mysql*/
 
-        MySqlConnection connection =
+        using MySqlConnection connection =
             new MySqlConnection(connectionString);
 
         connection.Open();/*Abre a conexão*/
 
         string sql = "SELECT * FROM FILMES";
 
-        MySqlCommand command =
+        using MySqlCommand command =
             new MySqlCommand(sql, connection);
 
-        MySqlDataReader reader = 
+       using MySqlDataReader reader = 
             command.ExecuteReader();/*Lê o mysql e gera a leitura dos filmes*/
 
 
@@ -46,20 +46,18 @@ public class FilmeController : ControllerBase{
             int classificacaoIdade = reader.GetInt32("CLASSIFICACAO_IDADE");
             string sinopse = reader.GetString("SINOPSE");
             string genero = reader.GetString("GENERO");
-            int duracao = reader.GetInt32("DURACAO");       
+            int duracao = reader.GetInt32("DURACAO");      
             string? urlImagem = reader.IsDBNull(reader.GetOrdinal("URL_IMAGEM"))
                 ? null
                 : reader.GetString("URL_IMAGEM");
+            string diretor = reader.GetString("DIRETOR");
+            int anoLancamento = reader.GetInt32("ANO_LANCAMENTO");
 
             Filme filme = 
-                new Filme(idFilme, titulo, classificacaoIdade, sinopse, genero, duracao, urlImagem);
+                new Filme(idFilme, titulo, classificacaoIdade, sinopse, genero, duracao, urlImagem, diretor, anoLancamento);
 
             filmes.Add(filme);
         }
-
-        reader.Close();//terminou de executar o read, fecha o reader
-        command.Dispose();//terminou de usar o command, libera o command
-        connection.Close();//terminou de executar a connection, fecha a connection
 
         return filmes;
     }
@@ -67,23 +65,19 @@ public class FilmeController : ControllerBase{
     //Lista um único filme
     [HttpGet("{idFilme}")]
     public Filme? GetById(int idFilme){
-        string connectionString = 
-            configuration.GetConnectionString("DefaultConnection")!;
+        string connectionString = configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection =
-            new MySqlConnection(connectionString);
+        using MySqlConnection connection = new MySqlConnection(connectionString);
 
         connection.Open();
 
         string sql = "SELECT * FROM FILMES WHERE ID_FILMES = @idFilme";
 
-        MySqlCommand command =
-            new MySqlCommand(sql, connection);
+        using MySqlCommand command = new MySqlCommand(sql, connection);
 
         command.Parameters.AddWithValue("@idFilme", idFilme);//Injetar a variável que tem o ID
 
-        MySqlDataReader reader = 
-            command.ExecuteReader();
+        using MySqlDataReader reader = command.ExecuteReader();
 
         if(reader.Read())
         {
@@ -96,16 +90,15 @@ public class FilmeController : ControllerBase{
             string? urlImagem = reader.IsDBNull(reader.GetOrdinal("URL_IMAGEM"))
                 ? null
                 : reader.GetString("URL_IMAGEM");
+            string diretor = reader.GetString("DIRETOR");
+            int anoLancamento = reader.GetInt32("ANO_LANCAMENTO");
+
 
             Filme filme = 
-                new Filme(idFilmeBanco, titulo, classificacaoIdade, sinopse, genero, duracao, urlImagem);
+                new Filme(idFilmeBanco, titulo, classificacaoIdade, sinopse, genero, duracao, urlImagem, diretor, anoLancamento);
 
             return filme;
         } 
-
-        reader.Close();
-        command.Dispose();
-        connection.Close();
 
         return null;
     }
@@ -116,14 +109,14 @@ public class FilmeController : ControllerBase{
         string connectionString = 
             configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection = 
+        using MySqlConnection connection = 
                 new MySqlConnection(connectionString);
 
         connection.Open();
 
         string sql = """
-            INSERT INTO FILMES (TITULO, CLASSIFICACAO_IDADE, SINOPSE, GENERO, DURACAO, URL_IMAGEM)
-            VALUES (@TITULO, @CLASSIFICACAO_IDADE, @SINOPSE, @GENERO, @DURACAO, @URL_IMAGEM);
+            INSERT INTO FILMES (TITULO, CLASSIFICACAO_IDADE, SINOPSE, GENERO, DURACAO, URL_IMAGEM, DIRETOR, ANO_LANCAMENTO)
+            VALUES (@TITULO, @CLASSIFICACAO_IDADE, @SINOPSE, @GENERO, @DURACAO, @URL_IMAGEM, @DIRETOR, @ANO_LANCAMENTO);
             SELECT LAST_INSERT_ID();
             """;
 
@@ -136,12 +129,13 @@ public class FilmeController : ControllerBase{
         command.Parameters.AddWithValue("@GENERO", request.Genero);
         command.Parameters.AddWithValue("@DURACAO", request.Duracao);
         command.Parameters.AddWithValue("@URL_IMAGEM", (object?)request.UrlImagem ?? DBNull.Value);
+        command.Parameters.AddWithValue("@DIRETOR", request.Diretor);
+        command.Parameters.AddWithValue("@ANO_LANCAMENTO", request.AnoLancamento);
 
         int idFilme = Convert.ToInt32(command.ExecuteScalar());
 
-        Filme filme = new Filme(idFilme, request.Titulo, request.ClassificacaoIdade, request.Sinopse, request.Genero, request.Duracao, request.UrlImagem);
+        Filme filme = new Filme(idFilme, request.Titulo, request.ClassificacaoIdade, request.Sinopse, request.Genero, request.Duracao, request.UrlImagem, request.Diretor, request.AnoLancamento);
 
-        connection.Close();
 
         return CreatedAtAction(
             nameof(GetById),
@@ -159,7 +153,7 @@ public class FilmeController : ControllerBase{
         string connectionString =
             configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection =
+        using MySqlConnection connection =
             new MySqlConnection(connectionString);
 
         connection.Open();
@@ -171,7 +165,9 @@ public class FilmeController : ControllerBase{
                 SINOPSE = @SINOPSE,
                 GENERO = @GENERO,
                 DURACAO = @DURACAO,
-                URL_IMAGEM = @URL_IMAGEM
+                URL_IMAGEM = @URL_IMAGEM,
+                DIRETOR = @DIRETOR,
+                ANO_LANCAMENTO = @ANO_LANCAMENTO
             WHERE ID_FILMES = @idFilme;
             """;
 
@@ -185,10 +181,11 @@ public class FilmeController : ControllerBase{
         command.Parameters.AddWithValue("@DURACAO", request.Duracao);
         command.Parameters.AddWithValue("@URL_IMAGEM", (object?)request.UrlImagem ?? DBNull.Value);
         command.Parameters.AddWithValue("@idFilme", idFilme);
+        command.Parameters.AddWithValue("@DIRETOR", request.Diretor);
+        command.Parameters.AddWithValue("@ANO_LANCAMENTO", request.AnoLancamento);
 
         int linhasAlteradas = command.ExecuteNonQuery();//executa um comando que não rpecisa devolver uma tabela de resultados
 
-        connection.Close();
 
         if (linhasAlteradas == 0)
         {
@@ -205,7 +202,7 @@ public class FilmeController : ControllerBase{
         string connectionString =
             configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection =
+        using MySqlConnection connection =
             new MySqlConnection(connectionString);
 
         connection.Open();
@@ -221,8 +218,6 @@ public class FilmeController : ControllerBase{
         command.Parameters.AddWithValue("@idFilme", idFilme);
 
         int linhasDeletadas = command.ExecuteNonQuery();
-
-        connection.Close();
 
         if (linhasDeletadas == 0)
         {
