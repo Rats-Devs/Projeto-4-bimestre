@@ -1,9 +1,5 @@
-
- // ==========================
- // BANNER
- // ==========================
-
- // Guarda os filmes recebidos da API
+//banner
+//guarda os filmes recebidos da API
 let filmes = [];
 
 let indexAtual = 0;
