@@ -7,9 +7,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("SiteCinemax", policy =>
     {
         policy
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyOrigin()//permite requisições de qualquer origem
+            .AllowAnyHeader()//permite qualquer header HTTP
+            .AllowAnyMethod();//permite métodos como GET, POST, PUT e DELETE
     });
 });
 

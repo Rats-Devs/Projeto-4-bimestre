@@ -10,8 +10,9 @@ public class Filme{
     public string? UrlImagem { get; private set; }
     public string Diretor { get; private set; }
     public int AnoLancamento { get; private set; }
+    public string? UrlBanner { get; private set; }
 
-    public Filme(int idFilme, string titulo, int classificacaoIdade, string sinopse, string genero, int duracao, string? urlImagem, string diretor, int anoLancamento){
+    public Filme(int idFilme, string titulo, int classificacaoIdade, string sinopse, string genero, int duracao, string? urlImagem, string diretor, int anoLancamento, string? urlBanner){
         IdFilme = idFilme;
         Titulo = titulo;
         ClassificacaoIdade = classificacaoIdade;
@@ -21,5 +22,6 @@ public class Filme{
         UrlImagem = urlImagem;
         Diretor = diretor;
         AnoLancamento = anoLancamento;
+        UrlBanner = urlBanner;
     }
 }

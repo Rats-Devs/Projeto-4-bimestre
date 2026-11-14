@@ -1,0 +1,12 @@
+criar o banco de dados com o código q está no CinemaBackEnd
+dar um git clone do repositorio do github
+
+conferir a porta do MySQl
+conferir a porta da API
+
+no appsettings.json localizado na pasta CinemaBackEnd:
+-Servidor (localhost).
+-Porta (3306, se for a padrão).
+-Banco de dados.
+-Usuário.
+-Senha.

@@ -50,11 +50,14 @@ public class FilmeController : ControllerBase{
             string? urlImagem = reader.IsDBNull(reader.GetOrdinal("URL_IMAGEM"))
                 ? null
                 : reader.GetString("URL_IMAGEM");
+            string? urlBanner = reader.IsDBNull(reader.GetOrdinal("URL_BANNER"))
+                ? null
+                : reader.GetString("URL_BANNER");
             string diretor = reader.GetString("DIRETOR");
             int anoLancamento = reader.GetInt32("ANO_LANCAMENTO");
 
             Filme filme = 
-                new Filme(idFilme, titulo, classificacaoIdade, sinopse, genero, duracao, urlImagem, diretor, anoLancamento);
+                new Filme(idFilme, titulo, classificacaoIdade, sinopse, genero, duracao, urlImagem, diretor, anoLancamento, urlBanner);
 
             filmes.Add(filme);
         }
@@ -90,12 +93,15 @@ public class FilmeController : ControllerBase{
             string? urlImagem = reader.IsDBNull(reader.GetOrdinal("URL_IMAGEM"))
                 ? null
                 : reader.GetString("URL_IMAGEM");
+            string? urlBanner = reader.IsDBNull(reader.GetOrdinal("URL_BANNER"))
+                ? null
+                : reader.GetString("URL_BANNER");
             string diretor = reader.GetString("DIRETOR");
             int anoLancamento = reader.GetInt32("ANO_LANCAMENTO");
 
 
             Filme filme = 
-                new Filme(idFilmeBanco, titulo, classificacaoIdade, sinopse, genero, duracao, urlImagem, diretor, anoLancamento);
+                new Filme(idFilmeBanco, titulo, classificacaoIdade, sinopse, genero, duracao, urlImagem, diretor, anoLancamento, urlBanner);
 
             return filme;
         } 
@@ -115,8 +121,8 @@ public class FilmeController : ControllerBase{
         connection.Open();
 
         string sql = """
-            INSERT INTO FILMES (TITULO, CLASSIFICACAO_IDADE, SINOPSE, GENERO, DURACAO, URL_IMAGEM, DIRETOR, ANO_LANCAMENTO)
-            VALUES (@TITULO, @CLASSIFICACAO_IDADE, @SINOPSE, @GENERO, @DURACAO, @URL_IMAGEM, @DIRETOR, @ANO_LANCAMENTO);
+            INSERT INTO FILMES (TITULO, CLASSIFICACAO_IDADE, SINOPSE, GENERO, DURACAO, URL_IMAGEM, DIRETOR, ANO_LANCAMENTO, URL_BANNER)
+            VALUES (@TITULO, @CLASSIFICACAO_IDADE, @SINOPSE, @GENERO, @DURACAO, @URL_IMAGEM, @DIRETOR, @ANO_LANCAMENTO, @URL_BANNER);
             SELECT LAST_INSERT_ID();
             """;
 
@@ -131,10 +137,11 @@ public class FilmeController : ControllerBase{
         command.Parameters.AddWithValue("@URL_IMAGEM", (object?)request.UrlImagem ?? DBNull.Value);
         command.Parameters.AddWithValue("@DIRETOR", request.Diretor);
         command.Parameters.AddWithValue("@ANO_LANCAMENTO", request.AnoLancamento);
+        command.Parameters.AddWithValue("@URL_BANNER", request.UrlBanner);
 
         int idFilme = Convert.ToInt32(command.ExecuteScalar());
 
-        Filme filme = new Filme(idFilme, request.Titulo, request.ClassificacaoIdade, request.Sinopse, request.Genero, request.Duracao, request.UrlImagem, request.Diretor, request.AnoLancamento);
+        Filme filme = new Filme(idFilme, request.Titulo, request.ClassificacaoIdade, request.Sinopse, request.Genero, request.Duracao, request.UrlImagem, request.Diretor, request.AnoLancamento, request.UrlBanner);
 
 
         return CreatedAtAction(
@@ -167,7 +174,8 @@ public class FilmeController : ControllerBase{
                 DURACAO = @DURACAO,
                 URL_IMAGEM = @URL_IMAGEM,
                 DIRETOR = @DIRETOR,
-                ANO_LANCAMENTO = @ANO_LANCAMENTO
+                ANO_LANCAMENTO = @ANO_LANCAMENTO,
+                URL_BANNER = @URL_BANNER
             WHERE ID_FILMES = @idFilme;
             """;
 
@@ -183,6 +191,7 @@ public class FilmeController : ControllerBase{
         command.Parameters.AddWithValue("@idFilme", idFilme);
         command.Parameters.AddWithValue("@DIRETOR", request.Diretor);
         command.Parameters.AddWithValue("@ANO_LANCAMENTO", request.AnoLancamento);
+        command.Parameters.AddWithValue("@URL_BANNER", request.UrlBanner);
 
         int linhasAlteradas = command.ExecuteNonQuery();//executa um comando que não rpecisa devolver uma tabela de resultados
 

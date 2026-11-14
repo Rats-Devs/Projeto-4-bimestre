@@ -4,43 +4,38 @@ let filmes = [];
 
 let indexAtual = 0;
 
-// A API não possui os links das páginas individuais.
-// Por isso, vamos manter os links separados.
-const linksFilmes = {
-    "Avatar": "avatar.html",
-    "Batman": "batman.html",
-    "Star Wars": "starwars.html",
-    "Harry Potter": "harry.html",
-    "Lilo Stitch": "lilo.html",
-    "Vingadores: Ultimato": "avengers.html",
-    "Homem-Aranha": "spider.html",
-    "Carros 2": "cars.html",
-    "Sonic": "sonic.html",
-    "Superman": "superman.html",
-    "Quarteto Fantástico": "quarteto.html",
-    "Coraline": "coraline.html"
-};
-
-// Busca os filmes na API
+//busca na API
 fetch("http://localhost:5160/api/Filme")
     .then(resposta => resposta.json())
     .then(dados => {
+        filmes = dados;//guarda os dados dos filmes
 
-        // Guarda os filmes recebidos
-        filmes = dados;
+        filmes.forEach(filme => {
+            const link = document.createElement("a");
+            const imagem = document.createElement("img");
 
-        // Mostra o primeiro filme, se houver dados
+            link.href = `detalhes.html?id=${filme.idFilme}`;
+
+            imagem.src = filme.urlImagem; //pega a url do banco de dados pela API
+            imagem.alt = filme.titulo;
+
+            link.appendChild(imagem); //coloca a imagem dentro do link, se clicar na imagem vai ser a mesma coisa q clicar no link
+            carrossel.appendChild(link);//coloca o link dentro do .carrosel do HTML
+        });
+        //cada repetição do forEach vai criar um link e uma imagem para um filme
+
+        //mostra o primeiro filme se ele estiver criado
         if (filmes.length > 0) {
             trocarBanner();
 
-            // Troca o banner a cada 4 segundos
+            //troca a cada 4 seg o banner
             setInterval(trocarBanner, 4000);
         }
 
     })
     .catch(erro => {
         console.error("Erro ao carregar os filmes:", erro);
-    });
+});
 
 function trocarBanner() {
 
@@ -48,20 +43,16 @@ function trocarBanner() {
     const titulo = document.getElementById("banner-titulo");
     const botao = document.getElementById("banner-botao");
 
-    // Pega o filme atual
+    //puxa o filme atual
     const filme = filmes[indexAtual];
 
-    // Atualiza imagem e título
-    banner.style.backgroundImage = `url('${filme.urlImagem}')`;
+    //atualiza para a imagem e o titulo do filme atual
+    banner.style.backgroundImage = `url('${filme.urlBanner}')`;
     titulo.textContent = filme.titulo;
 
-    // Mantém a navegação para a página individual
+    //navegação usando o id do filme
     botao.onclick = () => {
-        const link = linksFilmes[filme.titulo];
-
-        if (link) {
-            window.location.href = link;
-        }
+        window.location.href = `detalhes.html?id=${filme.idFilme}`;
     };
 
     // Próximo filme
@@ -72,11 +63,6 @@ function trocarBanner() {
         indexAtual = 0;
     }
 }
-
-
-// ==========================
-// CARROSSEL
-// ==========================
 
 // Seleciona o elemento do carrossel
 const carrossel = document.querySelector(".carrossel");
@@ -103,12 +89,7 @@ window.addEventListener("load", () => {
     larguraItem = item.offsetWidth + gap;
 });
 
-
-// ==========================
-// SETAS DO CARROSSEL
-// ==========================
-
-// 1 vai para a direita e -1 vai para a esquerda
+// 1 vai para a direita e -1 vai para a esquerda, setinhas
 function scrollCarrossel(direcao) {
 
     carrossel.scrollBy({
@@ -118,10 +99,7 @@ function scrollCarrossel(direcao) {
 }
 
 
-// ==========================
-// LOOP INFINITO
-// ==========================
-
+//loop do carrossel
 carrossel.addEventListener("scroll", () => {
 
     // Cancela o timer antigo
@@ -147,10 +125,7 @@ carrossel.addEventListener("scroll", () => {
 });
 
 
-// ==========================
-// COMPRA DE INGRESSOS
-// ==========================
-
+//compra do ingresso
 const sessoes = document.querySelectorAll(".sessao");
 
 sessoes.forEach(botao => {

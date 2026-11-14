@@ -220,11 +220,11 @@ nav a:hover::after {
 .banner {
     height: 800px;
     max-width: 100%;
-    background-size: cover;
+    background-size: 100% auto;
     background-position: center;
     display: flex;
     align-items: center;
-    padding: 40px;
+    padding: 100px;
     position: relative;
     overflow: hidden;
     transition: background-image 0.5s ease-in-out;
@@ -433,10 +433,10 @@ nav a:hover::after {
 /*Páginas filmes*/
 
 .movie{
-    width: 1100px;
+    width: 1000px;
     min-height: 60vh;
     margin: 50px auto;
-    padding: 50px;
+    padding: 60px;
     border-radius: 16px;
     background: linear-gradient(145deg, #0f172a, #020617);
     box-shadow: 0 25px 60px rgba(0,0,0,0.7);
@@ -444,7 +444,7 @@ nav a:hover::after {
 
 .info{
     display:flex;
-    gap:40px;
+    gap:100px;
     align-items:flex-start;
 }
 
@@ -465,8 +465,8 @@ nav a:hover::after {
 .badge {
     background: rgba(255,255,255,0.08);
     padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 14px;
+    border-radius: 20px;
+    font-size: 16px;
     font-family: "Archivo Black", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -519,7 +519,7 @@ nav a:hover::after {
     font-style: normal;
 }
 
-.classificacao-livre {
+.classificacao {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -530,115 +530,61 @@ nav a:hover::after {
     border-radius: 10px;
     font-weight: bold;
     font-size: 16px;
-
     color: white;
 
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255,255,255,0.2);
 
     transition: 0.3s;
+}
 
+.classificacao:hover {
+    transform: scale(1.1);
+}
+
+.classificacao-livre {
     background: linear-gradient(135deg, #22c55e, #16a34a);
     box-shadow: 0 0 10px rgba(34,197,94,0.6);
 }
 
-.classificacao-livre:hover {
-    transform: scale(1.1);
-}
-
 .classificacao-10 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 42px;
-    height: 42px;
-
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 16px;
-
-    color: white;
-
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.2);
-
-    transition: 0.3s;
-
     background: linear-gradient(135deg, #3b82f6, #2563eb);
     box-shadow: 0 0 10px rgba(59,130,246,0.6);
 }
 
-.classificacao-10:hover {
-    transform: scale(1.1);
-}
-
 .classificacao-12 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 42px;
-    height: 42px;
-
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 16px;
-
-    color: white;
-
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.2);
-
-    transition: 0.3s;
-
     background: linear-gradient(135deg, #eab308, #ca8a04);
     box-shadow: 0 0 10px rgba(234,179,8,0.6);
 }
 
-.classificacao-12:hover {
-    transform: scale(1.1);
-}
-
 .classificacao-14 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 42px;
-    height: 42px;
-
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 16px;
-
-    color: white;
-
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.2);
-
-    transition: 0.3s;
-
     background: linear-gradient(135deg, #f97316, #ea580c);
     box-shadow: 0 0 10px rgba(249,115,22,0.6);
 }
 
-.classificacao-14:hover {
-    transform: scale(1.1);
+.classificacao-16 {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 0 10px rgba(239,68,68,0.6);
 }
 
-.horarios{
-    margin-top:40px;
-    margin-left: 400px;
+.classificacao-18 {
+    background: linear-gradient(135deg, #525252, #171717);
+    box-shadow: 0 0 10px rgba(82,82,82,0.6);
+}
+
+.horarios {
+    margin-top: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-family: "Archivo Black", sans-serif;
-    font-weight: 400;
+    font-size: 30px;
     font-style: normal;
 }
 
 .horarios h2{
     color:#60a5fa;
     margin-bottom:15px;
-    margin-left: 80px;
 }
 
 .sessoes{
@@ -653,7 +599,7 @@ nav a:hover::after {
     color:#cbd5f5;
     padding:12px 22px;
     border-radius:10px;
-    font-size:15px;
+    font-size:20px;
     cursor:pointer;
     transition:0.25s;
 }
@@ -661,7 +607,7 @@ nav a:hover::after {
 .sessao:hover{
     background:#2563eb;
     color:white;
-    transform:scale(1.05);
+    transform:scale(1.10);
 }
 
 .sessao.ativa{
@@ -677,7 +623,7 @@ nav a:hover::after {
     padding:18px 40px;
     border-radius:12px;
     color:white;
-    font-size:17px;
+    font-size:25px;
     font-weight:bold;
     cursor:pointer;
     transition:0.3s;

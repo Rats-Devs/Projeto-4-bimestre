@@ -12,8 +12,9 @@ CREATE TABLE FILMES (
     GENERO VARCHAR(100),
     DURACAO INT NOT NULL,
     URL_IMAGEM VARCHAR(500) NULL,
+    URL_BANNER VARCHAR(500) NULL,
     DIRETOR VARCHAR(150),
-    COLUMN ANO_LANCAMENTO INT
+    ANO_LANCAMENTO INT
 );
 
 CREATE TABLE USUARIOS (
@@ -36,4 +37,4 @@ CREATE TABLE INGRESSOS (
 );
 
 Configurar a conexão:
-confere se o usuário, senha, servidor e nome do banco no appsettings.json tá igual ao MYSQL do computador
+conferir se o usuário, senha, servidor e nome do banco no appsettings.json tá igual ao MYSQL do computador
