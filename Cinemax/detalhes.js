@@ -27,7 +27,7 @@ fetch(`http://localhost:5160/api/Filme/${idFilme}`)
             classificacao.classList.add(`classificacao-${idade}`);
         }
 
-        document.getElementById("duracao").textContent = dados.duracao;
+        document.getElementById("duracao").textContent = `${dados.duracao} min`;
         document.getElementById("genero").textContent = dados.genero;
         document.getElementById("diretor").textContent = dados.diretor;
         document.getElementById("anoLancamento").textContent = dados.anoLancamento;
