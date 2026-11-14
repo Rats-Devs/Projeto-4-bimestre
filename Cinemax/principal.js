@@ -24,6 +24,15 @@ fetch("http://localhost:5160/api/Filme")
         });
         //cada repetição do forEach vai criar um link e uma imagem para um filme
 
+        //duplica os filmes para criar o loop
+        carrossel.innerHTML += carrossel.innerHTML;
+
+        //calcula a largura de cada filme e o espaço entre eles
+        const item = carrossel.children[0];
+        const gap = parseFloat(getComputedStyle(carrossel).gap) || 0;
+
+        larguraItem = item.offsetWidth + gap;
+
         //mostra o primeiro filme se ele estiver criado
         if (filmes.length > 0) {
             trocarBanner();
@@ -67,27 +76,11 @@ function trocarBanner() {
 // Seleciona o elemento do carrossel
 const carrossel = document.querySelector(".carrossel");
 
-// Duplica os filmes para criar o loop
-carrossel.innerHTML += carrossel.innerHTML;
-
 // Guarda o tamanho de cada filme
 let larguraItem = 0;
 
 // Controla o tempo e evita bugs
 let timeout = null;
-
-// Quando a página carregar, executa
-window.addEventListener("load", () => {
-
-    // Pega o primeiro elemento dentro do carrossel
-    const item = carrossel.children[0];
-
-    // Pega o espaço entre os itens
-    const gap = parseFloat(getComputedStyle(carrossel).gap) || 0;
-
-    // Calcula a largura do item + espaço
-    larguraItem = item.offsetWidth + gap;
-});
 
 // 1 vai para a direita e -1 vai para a esquerda, setinhas
 function scrollCarrossel(direcao) {
