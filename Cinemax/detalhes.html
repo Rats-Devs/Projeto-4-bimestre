@@ -19,15 +19,6 @@
     <nav>
       <ul>
         <li><a href="principal.html">Inicio</a></li>
-        <li>
-          <a href="login.html">
-            <button class="login">
-                    <svg class="svgIcon" viewBox="0 0 448 512" xmlns="http://w3.org">
-                        <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path>
-                    </svg>
-            </button>
-          </a>
-        </li>
       </ul>
     </nav>
 
@@ -59,6 +50,15 @@
     </div>
 
     <div class="horarios">
+    <h2>Tipo do ingresso</h2>
+
+        <div class="sessoes">
+        <button class="tipo-ingresso">Inteira</button>
+        <button class="tipo-ingresso">Meia</button>
+        </div>
+    </div>
+
+    <div class="horarios">
     <h2>Horários</h2>
 
         <div class="sessoes">
@@ -67,23 +67,116 @@
         <button class="sessao">19:00</button>
         </div>
     </div>
-</div>
 
-<a href="principal.html">
-    <button class="ingresso">Comprar ingresso</button>
-</a>
+    <ul class="showcase">
+        <li>
+            <div class="assento"></div>
+            <small>N/A</small>
+        </li>
+        <li>
+            <div class="assento ocupado"></div>
+            <small>Ocupados</small>
+        </li>
+        <li>
+            <div class="assento selecionado"></div>
+            <small>Selecionados</small>
+        </li>
+    </ul>
+
+    <div class="container">
+        <div class="tela"></div>
+
+        <div class="row">
+            <div class="assento" data-assento="A1">A1</div>
+            <div class="assento" data-assento="A2">A2</div>
+            <div class="assento" data-assento="A3">A3</div>
+            <div class="assento" data-assento="A4">A4</div>
+            <div class="assento" data-assento="A5">A5</div>
+            <div class="assento" data-assento="A6">A6</div>
+            <div class="assento" data-assento="A7">A7</div>
+            <div class="assento" data-assento="A8">A8</div>
+            <div class="assento" data-assento="A9">A9</div>
+            <div class="assento" data-assento="A10">A10</div>
+            <div class="assento" data-assento="A11">A11</div>
+            <div class="assento" data-assento="A12">A12</div>
+        </div>
+
+        <div class="row">
+            <div class="assento" data-assento="B1">B1</div>
+            <div class="assento" data-assento="B2">B2</div>
+            <div class="assento" data-assento="B3">B3</div>
+            <div class="assento" data-assento="B4">B4</div>
+            <div class="assento" data-assento="B5">B5</div>
+            <div class="assento" data-assento="B6">B6</div>
+            <div class="assento" data-assento="B7">B7</div>
+            <div class="assento" data-assento="B8">B8</div>
+            <div class="assento" data-assento="B9">B9</div>
+            <div class="assento" data-assento="B10">B10</div>
+            <div class="assento" data-assento="B11">B11</div>
+            <div class="assento" data-assento="B12">B12</div>
+        </div>
+
+        <div class="row">
+            <div class="assento" data-assento="C1">C1</div>
+            <div class="assento" data-assento="C2">C2</div>
+            <div class="assento" data-assento="C3">C3</div>
+            <div class="assento" data-assento="C4">C4</div>
+            <div class="assento" data-assento="C5">C5</div>
+            <div class="assento" data-assento="C6">C6</div>
+            <div class="assento" data-assento="C7">C7</div>
+            <div class="assento" data-assento="C8">C8</div>
+            <div class="assento" data-assento="C9">C9</div>
+            <div class="assento" data-assento="C10">C10</div>
+            <div class="assento" data-assento="C11">C11</div>
+            <div class="assento" data-assento="C12">C12</div>
+        </div>
+
+        <div class="row">
+            <div class="assento" data-assento="D1">D1</div>
+            <div class="assento" data-assento="D2">D2</div>
+            <div class="assento" data-assento="D3">D3</div>
+            <div class="assento" data-assento="D4">D4</div>
+            <div class="assento" data-assento="D5">D5</div>
+            <div class="assento" data-assento="D6">D6</div>
+            <div class="assento" data-assento="D7">D7</div>
+            <div class="assento" data-assento="D8">D8</div>
+            <div class="assento" data-assento="D9">D9</div>
+            <div class="assento" data-assento="D10">D10</div>
+            <div class="assento" data-assento="D11">D11</div>
+            <div class="assento" data-assento="D12">D12</div>
+        </div>
+
+        <div class="row">
+            <div class="assento" data-assento="E1">E1</div>
+            <div class="assento" data-assento="E2">E2</div>
+            <div class="assento" data-assento="E3">E3</div>
+            <div class="assento" data-assento="E4">E4</div>
+            <div class="assento" data-assento="E5">E5</div>
+            <div class="assento" data-assento="E6">E6</div>
+            <div class="assento" data-assento="E7">E7</div>
+            <div class="assento" data-assento="E8">E8</div>
+            <div class="assento" data-assento="E9">E9</div>
+            <div class="assento" data-assento="E10">E10</div>
+            <div class="assento" data-assento="E11">E11</div>
+            <div class="assento" data-assento="E12">E12</div>
+        </div>
+    </div>
+    <div class="resumo-compra">
+        <p>Assentos selecionados: <span id="assentos-selecionados">Nenhum</span></p>
+
+        <p>Quantidade: <span id="quantidade">0</span></p>
+
+        <p>Horário da sessão: <span id="horario-selecionado">Não selecionado</span></p>
+
+        <p>Total: R$ <span id="preco-total">0,00</span></p>
+    </div>
+
+<button class="ingresso" id="comprar-ingresso">
+    Comprar ingresso
+</button>
     <footer>
         <p>&copy; 2026 Cinemax. Todos os direitos reservados.</p>
     </footer>
-<script>
-    const sessoes = document.querySelectorAll(".sessao")
-    sessoes.forEach(botao => {
-    botao.addEventListener("click", () => {
-    sessoes.forEach(b => b.classList.remove("ativa"))
-    botao.classList.add("ativa")
-})
-})
-</script>
 
 <script src="detalhes.js"></script>
 

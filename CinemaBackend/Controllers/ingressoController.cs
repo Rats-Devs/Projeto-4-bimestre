@@ -16,285 +16,273 @@ public class IngressoController : ControllerBase
         this.configuration = configuration;
     }
 
-    //Listar todos os ingressos
+    //converte os dados do banco em um objeto Ingresso
+    private static Ingresso MapearIngresso(MySqlDataReader reader)
+    {
+        return new Ingresso(
+            reader.GetInt32("ID_INGRESSOS"),
+            reader.GetInt32("ID_FILMES_FK"),
+            reader.GetString("ASSENTO"),
+            reader.GetString("TIPO_INGRESSO"),
+            reader.GetDecimal("PRECO"),
+            reader.GetDateTime("DATA_COMPRA"),
+            TimeOnly.FromTimeSpan(
+                reader.GetTimeSpan(
+                    reader.GetOrdinal("HORARIO_SESSAO")
+                )
+            )
+        );
+    }
+
+    //lista todos os ingressos
     [HttpGet]
-    public List<Ingresso> Get()
+    public ActionResult<List<Ingresso>> Get()
     {
         string connectionString =
             configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection =
+        using MySqlConnection connection =
             new MySqlConnection(connectionString);
 
         connection.Open();
 
         string sql = "SELECT * FROM INGRESSOS";
 
-        MySqlCommand command =
+        using MySqlCommand command =
             new MySqlCommand(sql, connection);
 
-        MySqlDataReader reader =
+        using MySqlDataReader reader =
             command.ExecuteReader();
 
-        List<Ingresso> ingressos =
-            new List<Ingresso>();
+        List<Ingresso> ingressos = new();
 
         while (reader.Read())
         {
-            int idIngresso =
-                reader.GetInt32("ID_INGRESSOS");
-
-            int idFilme =
-                reader.GetInt32("ID_FILMES_FK");
-
-            int idUsuario =
-                reader.GetInt32("ID_USUARIO_FK");
-
-            decimal preco =
-                reader.GetDecimal("PRECO");
-
-            string tipo =
-                reader.GetString("TIPO");
-
-            DateTime dataCompra =
-                reader.GetDateTime("DATA_COMPRA");
-
-            Ingresso ingresso =
-                new Ingresso(
-                    idIngresso,
-                    idFilme,
-                    idUsuario,
-                    preco,
-                    tipo,
-                    dataCompra
-                );
-
-            ingressos.Add(ingresso);
+            ingressos.Add(MapearIngresso(reader));
         }
 
-        reader.Close();
-        command.Dispose();
-        connection.Close();
-
-        return ingressos;
+        return Ok(ingressos);
     }
 
-    //Listar um unico ingresso
-
-    [HttpGet("{idIngresso}")]
-    public Ingresso? GetById(int idIngresso)
+    //consulta assentos ocupados de um filme e horário
+    [HttpGet("assentos-ocupados")]
+    public IActionResult GetAssentosOcupados(
+        [FromQuery] int idFilme,
+        [FromQuery] string horarioSessao)
     {
+        if (!TimeOnly.TryParse(horarioSessao, out TimeOnly horario))
+        {
+            return BadRequest("Horário inválido.");
+        }
+
         string connectionString =
             configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection =
+        using MySqlConnection connection =
             new MySqlConnection(connectionString);
 
         connection.Open();
 
-        string sql =
-            "SELECT * FROM INGRESSOS WHERE ID_INGRESSOS = @idIngresso";
+        string sql = """
+            SELECT ASSENTO
+            FROM INGRESSOS
+            WHERE ID_FILMES_FK = @idFilme
+            AND HORARIO_SESSAO = @horario;
+            """;
 
-        MySqlCommand command =
-            new MySqlCommand(sql, connection);
+        using MySqlCommand command = new MySqlCommand(sql, connection);
 
-        command.Parameters.AddWithValue(
-            "@idIngresso",
-            idIngresso
-        );
+        command.Parameters.AddWithValue("@idFilme", idFilme);
 
-        MySqlDataReader reader =
-            command.ExecuteReader();
+        command.Parameters.Add("@horario", MySqlDbType.Time)
+            .Value = horario.ToTimeSpan();
 
-        if (reader.Read())
+        using MySqlDataReader reader = command.ExecuteReader();
+
+        List<string> assentosOcupados = new();
+
+        while (reader.Read())
         {
-            int idIngressoBanco =
-                reader.GetInt32("ID_INGRESSOS");
-
-            int idFilme =
-                reader.GetInt32("ID_FILMES_FK");
-
-            int idUsuario =
-                reader.GetInt32("ID_USUARIO_FK");
-
-            decimal preco =
-                reader.GetDecimal("PRECO");
-
-            string tipo =
-                reader.GetString("TIPO");
-
-            DateTime dataCompra =
-                reader.GetDateTime("DATA_COMPRA");
-
-            Ingresso ingresso =
-                new Ingresso(
-                    idIngressoBanco,
-                    idFilme,
-                    idUsuario,
-                    preco,
-                    tipo,
-                    dataCompra
-                );
-
-            reader.Close();
-            command.Dispose();
-            connection.Close();
-
-            return ingresso;
+            assentosOcupados.Add(
+                reader.GetString("ASSENTO")
+            );
         }
 
-        reader.Close();
-        command.Dispose();
-        connection.Close();
-
-        return null;
+        return Ok(assentosOcupados);
     }
 
-    //Cadastra um ingresso
+    //lista um único ingresso
+    [HttpGet("{idIngresso}")]
+    public ActionResult<Ingresso> GetById(int idIngresso)
+    {
+        string connectionString =
+            configuration.GetConnectionString("DefaultConnection")!;
 
+        using MySqlConnection connection =
+            new MySqlConnection(connectionString);
+
+        connection.Open();
+
+        string sql = """
+            SELECT *
+            FROM INGRESSOS
+            WHERE ID_INGRESSOS = @idIngresso;
+            """;
+
+        using MySqlCommand command = new MySqlCommand(sql, connection);
+
+        command.Parameters.AddWithValue("@idIngresso", idIngresso);
+
+        using MySqlDataReader reader = command.ExecuteReader();
+
+        if (!reader.Read())
+        {
+            return NotFound();
+        }
+
+        Ingresso ingresso = MapearIngresso(reader);
+
+        return Ok(ingresso);
+    }
+
+    //cadastrar um ingresso
     [HttpPost]
     public IActionResult Post(IngressoRequest request)
     {
         string connectionString =
             configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection =
+        using MySqlConnection connection =
             new MySqlConnection(connectionString);
 
         connection.Open();
 
         string sql = """
             INSERT INTO INGRESSOS
-                (ID_FILMES_FK, ID_USUARIO_FK, PRECO, TIPO)
+                (ID_FILMES_FK, ASSENTO, TIPO_INGRESSO,
+                 PRECO, HORARIO_SESSAO)
             VALUES
-                (@ID_FILMES_FK, @ID_USUARIO_FK, @PRECO, @TIPO);
+                (@idFilme, @assento, @tipoIngresso,
+                 @preco, @horario);
 
             SELECT LAST_INSERT_ID();
             """;
 
-        using MySqlCommand command =
-            new MySqlCommand(sql, connection);
+        using MySqlCommand command = new MySqlCommand(sql, connection);
 
-        command.Parameters.AddWithValue(
-            "@ID_FILMES_FK",
-            request.IdFilme
-        );
+        command.Parameters.AddWithValue("@idFilme", request.IdFilme);
 
-        command.Parameters.AddWithValue(
-            "@ID_USUARIO_FK",
-            request.IdUsuario
-        );
+        command.Parameters.AddWithValue("@assento", request.Assento);
 
-        command.Parameters.AddWithValue(
-            "@PRECO",
-            request.Preco
-        );
+        command.Parameters.AddWithValue("@tipoIngresso", request.TipoIngresso);
 
-        command.Parameters.AddWithValue(
-            "@TIPO",
-            request.Tipo
-        );
+        command.Parameters.AddWithValue("@preco", request.Preco);
 
-        int idIngresso =
-            Convert.ToInt32(command.ExecuteScalar());
+        command.Parameters.Add("@horario", MySqlDbType.Time)
+            .Value = request.HorarioSessao.ToTimeSpan();
 
-        DateTime dataCompra =
-            DateTime.Now;
+        try
+        {
+            int idIngresso =
+                Convert.ToInt32(command.ExecuteScalar());
 
-        Ingresso ingresso =
-            new Ingresso(
+            Ingresso ingresso = new(
                 idIngresso,
                 request.IdFilme,
-                request.IdUsuario,
+                request.Assento,
+                request.TipoIngresso,
                 request.Preco,
-                request.Tipo,
-                dataCompra
+                DateTime.Now,
+                request.HorarioSessao
             );
 
-        connection.Close();
-
-        return CreatedAtAction(
-            nameof(GetById),
-            new
-            {
-                idIngresso = ingresso.IdIngresso
-            },
-            ingresso
-        );
+            return CreatedAtAction(
+                nameof(GetById),
+                new { idIngresso = ingresso.IdIngresso },
+                ingresso
+            );
+        }
+        catch (MySqlException ex) when (ex.Number == 1062)
+        {
+            return Conflict(
+                "Esse assento já foi comprado para esse filme e horário."
+            );
+        }
     }
 
-    //Altera um ingresso
+    //altera um ingresso
     [HttpPut("{idIngresso}")]
     public IActionResult Put(
         int idIngresso,
         IngressoRequest request)
     {
-        string connectionString =
-            configuration.GetConnectionString("DefaultConnection")!;
+        string connectionString = configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection =
-            new MySqlConnection(connectionString);
+        using MySqlConnection connection = new MySqlConnection(connectionString);
 
         connection.Open();
 
         string sql = """
             UPDATE INGRESSOS
-            SET ID_FILMES_FK = @ID_FILMES_FK,
-                ID_USUARIO_FK = @ID_USUARIO_FK,
-                PRECO = @PRECO,
-                TIPO = @TIPO
+            SET ID_FILMES_FK = @idFilme,
+                ASSENTO = @assento,
+                TIPO_INGRESSO = @tipoIngresso,
+                PRECO = @preco,
+                HORARIO_SESSAO = @horario
             WHERE ID_INGRESSOS = @idIngresso;
             """;
 
-        using MySqlCommand command =
-            new MySqlCommand(sql, connection);
+        using MySqlCommand command = new MySqlCommand(sql, connection);
 
-        command.Parameters.AddWithValue(
-            "@ID_FILMES_FK",
-            request.IdFilme
-        );
+        command.Parameters.AddWithValue("@idFilme", request.IdFilme);
 
-        command.Parameters.AddWithValue(
-            "@ID_USUARIO_FK",
-            request.IdUsuario
-        );
+        command.Parameters.AddWithValue("@assento", request.Assento);
 
-        command.Parameters.AddWithValue(
-            "@PRECO",
-            request.Preco
-        );
+        command.Parameters.AddWithValue("@tipoIngresso", request.TipoIngresso);
 
-        command.Parameters.AddWithValue(
-            "@TIPO",
-            request.Tipo
-        );
+        command.Parameters.AddWithValue("@preco", request.Preco);
 
-        command.Parameters.AddWithValue(
-            "@idIngresso",
-            idIngresso
-        );
+        command.Parameters.Add("@horario", MySqlDbType.Time)
+            .Value = request.HorarioSessao.ToTimeSpan();
 
-        int linhasAlteradas =
+        command.Parameters.AddWithValue("@idIngresso", idIngresso);
+
+        try
+        {
+            //verifica se o ingresso existe
+            using MySqlCommand verificar =
+                new MySqlCommand(
+                    "SELECT COUNT(*) FROM INGRESSOS WHERE ID_INGRESSOS = @id",
+                    connection
+                );
+
+            verificar.Parameters.AddWithValue("@id", idIngresso);
+
+            if (Convert.ToInt32(verificar.ExecuteScalar()) == 0)
+            {
+                return NotFound();
+            }
+
             command.ExecuteNonQuery();
 
-        connection.Close();
-
-        if (linhasAlteradas == 0)
-        {
-            return NotFound();
+            return Ok();
         }
-
-        return Ok();
+        catch (MySqlException ex) when (ex.Number == 1062)
+        {
+            return Conflict(
+                "Esse assento já foi comprado para esse filme e horário."
+            );
+        }
     }
 
-    //Deleta um ingresso
+    //deleta um ingresso
     [HttpDelete("{idIngresso}")]
     public IActionResult Delete(int idIngresso)
     {
         string connectionString =
             configuration.GetConnectionString("DefaultConnection")!;
 
-        MySqlConnection connection =
+        using MySqlConnection connection =
             new MySqlConnection(connectionString);
 
         connection.Open();
@@ -308,14 +296,9 @@ public class IngressoController : ControllerBase
             new MySqlCommand(sql, connection);
 
         command.Parameters.AddWithValue(
-            "@idIngresso",
-            idIngresso
-        );
+            "@idIngresso", idIngresso);
 
-        int linhasDeletadas =
-            command.ExecuteNonQuery();
-
-        connection.Close();
+        int linhasDeletadas = command.ExecuteNonQuery();
 
         if (linhasDeletadas == 0)
         {

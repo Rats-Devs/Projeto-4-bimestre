@@ -1,5 +1,6 @@
 *{
     text-decoration: none;
+    box-sizing: border-box;
 }
 body {
     margin: 0;
@@ -515,7 +516,7 @@ nav a:hover::after {
 }
 
 .horarios {
-    margin-top: 150px;
+    margin-top: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -526,13 +527,33 @@ nav a:hover::after {
 
 .horarios h2{
     color:#60a5fa;
-    margin-bottom:15px;
 }
 
 .sessoes{
     display:flex;
-    gap:15px;
-    margin-top:15px;
+    gap:25px;
+}
+
+.tipo-ingresso{
+    background:#1e293b;
+    border:none;
+    color:#cbd5f5;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:20px;
+    cursor:pointer;
+    transition:0.25s;
+}
+
+.tipo-ingresso:hover{
+    background:#2563eb;
+    color:white;
+    transform:scale(1.10);
+}
+
+.tipo-ingresso.ativa{
+    background:#2563eb;
+    color:white;
 }
 
 .sessao{
@@ -555,6 +576,129 @@ nav a:hover::after {
 .sessao.ativa{
     background:#2563eb;
     color:white;
+}
+
+/*caixa de assentos*/
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+
+.container{
+    perspective: 4000px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.assento{
+    background-color:#ffffff;
+    height:40px;
+    width: 40px;
+    margin: 5px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition:0.25s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #172033;
+
+    font-family: "Archivo Black", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.assento.selecionado{
+    background-color: #2563eb;
+}
+
+.assento.ocupado{
+    background-color: #444451;
+}
+
+.assento:nth-of-type(3){
+    margin-right: 20px;
+}
+
+.assento:nth-last-of-type(3){
+    margin-left: 20px;
+}
+
+.assento:not(.ocupado):hover{
+    cursor: pointer;
+    transform: scale(1.10);
+}
+
+.showcase .assento:not(.ocupado):hover{
+    cursor: pointer;
+    transform: scale(1.10);
+}
+
+.showcase{
+    background: rgba(0,0,0,0.1);
+    font-size: 20px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color:#ffffff;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.showcase li{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+}
+
+.showcase li small{
+    margin-left: 2px;
+}
+
+.row{
+    display: flex;
+    justify-content: center;
+}
+
+.tela{
+    background-color: #fff;
+    height: 250px;
+    width: 78%;
+    margin: 20px 0;
+    transform: rotateX(-45deg);
+    box-shadow: 0 3px 10px rgba(255,255,255,0.7);
+}
+
+/*resumo da compra*/
+.resumo-compra {
+    width: 100%;
+    margin: 10px auto;
+    padding: 50px;
+    background-color: #172033;
+    border-radius: 15px;
+    box-sizing: border-box;
+
+    font-family: "Archivo Black", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.resumo-compra p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+    margin: 20px 0;
+    font-size: 22px;
+}
+
+.resumo-compra span {
+    color: #8ED8F8;
+    font-weight: bold;
+    text-align: right;
 }
 
 .ingresso{

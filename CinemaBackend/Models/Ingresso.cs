@@ -4,17 +4,19 @@ public class Ingresso
 {
     public int IdIngresso { get; private set; }
     public int IdFilme { get; private set; }
-    public int IdUsuario { get; private set; }
+    public string Assento { get; private set; }
+    public string TipoIngresso { get; private set; }
     public decimal Preco { get; private set; }
-    public string Tipo { get; private set; }
     public DateTime DataCompra { get; private set; }
+    public TimeOnly HorarioSessao { get; private set; }
 
-    public Ingresso(int idIngresso, int idFilme, int idUsuario, decimal preco, string tipo, DateTime dataCompra){
+    public Ingresso(int idIngresso, int idFilme, string assento, string tipoIngresso, decimal preco, DateTime dataCompra, TimeOnly horarioSessao){
         IdIngresso = idIngresso;
         IdFilme = idFilme;
-        IdUsuario = idUsuario;
+        Assento = assento;
+        TipoIngresso = tipoIngresso;
         Preco = preco;
-        Tipo = tipo;
         DataCompra = dataCompra;
+        HorarioSessao = horarioSessao;
     }
 }

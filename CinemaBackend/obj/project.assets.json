@@ -508,11 +508,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lucas\\Desktop\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj",
+      "projectUniqueName": "C:\\Users\\lucas\\Desktop\\Projeto-4-bimestre\\CinemaBackend\\CinemaBackend.csproj",
       "projectName": "CinemaBackend",
-      "projectPath": "C:\\Users\\lucas\\Desktop\\Projeto 4 BIMESTRE\\CinemaBackend\\CinemaBackend.csproj",
+      "projectPath": "C:\\Users\\lucas\\Desktop\\Projeto-4-bimestre\\CinemaBackend\\CinemaBackend.csproj",
       "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lucas\\Desktop\\Projeto 4 BIMESTRE\\CinemaBackend\\obj\\",
+      "outputPath": "C:\\Users\\lucas\\Desktop\\Projeto-4-bimestre\\CinemaBackend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
