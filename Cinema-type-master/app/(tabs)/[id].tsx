@@ -1,23 +1,96 @@
-import {
-    Poppins_400Regular,
-    Poppins_600SemiBold,
-    Poppins_700Bold,
-    useFonts,
-} from "@expo-google-fonts/poppins";
+import {Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, useFonts} from "@expo-google-fonts/poppins";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import { useEffect, useRef, useState } from "react";
+
+interface Filme {
+  idFilme: number;
+  titulo: string;
+  classificacaoIdade: number;
+  sinopse: string;
+  genero: string;
+  duracao: number;
+  urlImagem: string | null;
+  diretor: string;
+  anoLancamento: number;
+}
 
 export default function DetalhesFilme() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
+
+  const [filme, setFilme] = useState<Filme | null>(null);//state q vai armazenar os dados do filme da API
+  const [carregando, setCarregando] = useState(true);
+
+  const [tipoSelecionado, setTipoSelecionado] = useState<"Inteira" | "Meia" | null>(null);
+  const [horarioSelecionado, setHorarioSelecionado] = useState<string | null>(null);
+  const [assentosSelecionados, setAssentosSelecionados] = useState<string[]>([]);
+  const [assentosOcupados, setAssentosOcupados] = useState<string[]>([]);
+
+  const [comprando, setComprando] = useState(false);
+
+  const scrollRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    async function buscarFilme() {
+      setCarregando(true);//inicia novamente o carregamento caso o ID mude.
+
+      //permite tratar erros na requisição
+      try {
+        const resposta = await fetch(
+          `http://localhost:5160/api/Filme/${id}`
+        );
+
+        //verifica se a resposta HTTP foi bem-sucedida.
+        if (!resposta.ok) {
+          setFilme(null);
+          return;
+        }
+
+        const dados = await resposta.json();
+
+        //guarda o filme recebido da API
+        setFilme(dados);
+
+      //permite tratar erros na requisição
+      } catch (erro) {
+        console.error("Erro ao buscar filme:", erro);
+        setFilme(null);
+
+      } finally {
+        //executa mesmo se ocorrer algum erro
+        setCarregando(false);
+      }
+    }
+
+      buscarFilme();
+    }, [id]);
+
+  useEffect(() => {
+    if (!horarioSelecionado || !id) return;
+
+    const buscarAssentosOcupados = async () => {
+      try {
+        const resposta = await fetch(
+          `http://localhost:5160/api/Ingresso/assentos-ocupados?idFilme=${id}&horarioSessao=${encodeURIComponent(horarioSelecionado)}`
+        );
+
+        if (!resposta.ok) {
+          throw new Error("Erro ao buscar assentos ocupados.");
+        }
+
+        const dados = await resposta.json();
+
+        setAssentosOcupados(dados);
+        setAssentosSelecionados([]);
+      } catch (erro) {
+        console.error("Erro ao consultar assentos:", erro);
+      }
+    };
+
+      buscarAssentosOcupados();
+    }, [id, horarioSelecionado]);
 
   const [fontsLoaded] = useFonts({
     Poppins: Poppins_400Regular,
@@ -33,113 +106,23 @@ export default function DetalhesFilme() {
   const cor_secundaria = "#F2F0EF";
   const cor_destaque = "#FF0000";
 
-  const FILMES = {
-    "1": {
-      titulo: "Spiderman: Um Novo Dia",
-      ano: "2026",
-      genero: "Ação / Aventura",
-      duracao: "2h 30min",
-      nota: "7.8",
-      reviews: "6.7K",
-      imagem:
-        "https://cdn.marvel.com/content/2x/smbnd_online_1400x2100_hoodie_02.webp",
-      descricao:
-        "Peter Parker enfrenta novos desafios enquanto tenta equilibrar sua vida pessoal com as responsabilidades de ser o Homem-Aranha.",
-    },
+  const horarios = ["12:00", "15:30", "19:00"];
 
-    "2": {
-      titulo: "Logan",
-      ano: "2017",
-      genero: "Ação / Drama",
-      duracao: "2h 17min",
-      nota: "8.1",
-      reviews: "6.7K",
-      imagem:
-        "https://i.ebayimg.com/00/s/MTYwMFgxMDM4/z/IgYAAOSwBr1kXLCG/$_57.JPG?set_id=880000500F",
-      descricao:
-        "Em um futuro onde os mutantes estão praticamente extintos, Logan precisa proteger uma jovem mutante enquanto enfrenta ameaças do seu passado.",
-    },
+  const precoInteira = 30;
+  const precoMeia = 15;
 
-    "3": {
-      titulo: "The Batman",
-      ano: "2022",
-      genero: "Ação / Crime",
-      duracao: "2h 56min",
-      nota: "7.8",
-      reviews: "6.7K",
-      imagem:
-        "https://static.wikia.nocookie.net/universo-batman/images/a/ac/P%C3%B4ster_de_%27Batman%27.jpg/revision/latest?cb=20220307110904&path-prefix=pt-br",
-      descricao:
-        "The Batman acompanha Bruce Wayne em seu segundo ano como vigilante de Gotham. Enquanto investiga uma série de crimes misteriosos, Batman enfrenta o Charada.",
-    },
+  const fileiras = ["A", "B", "C", "D", "E"];
+  const quantidadeAssentos = 12;
 
-    "4": {
-      titulo: "It: Chapter Two",
-      ano: "2019",
-      genero: "Terror",
-      duracao: "2h 49min",
-      nota: "6.5",
-      reviews: "6.7K",
-      imagem:
-        "https://pbs.twimg.com/media/D6IsBmFV4AEQ1lz?format=jpg&name=4096x4096",
-      descricao:
-        "Anos depois dos acontecimentos originais, o Clube dos Perdedores retorna a Derry para enfrentar novamente a ameaça que marcou sua infância.",
-    },
+  const precoUnitario =
+    tipoSelecionado === "Inteira" ? precoInteira :
+    tipoSelecionado === "Meia" ? precoMeia : 0;
 
-    "5": {
-      titulo: "Deadpool",
-      ano: "2016",
-      genero: "Ação / Comédia",
-      duracao: "1h 48min",
-      nota: "8.0",
-      reviews: "6.7K",
-      imagem:
-        "https://mir-s3-cdn-cf.behance.net/project_modules/fs/04eafb25626631.5634844b7293f.jpg",
-      descricao:
-        "Wade Wilson ganha habilidades especiais após um experimento e assume a identidade de Deadpool em busca de vingança.",
-    },
+  const total = assentosSelecionados.length * precoUnitario;
 
-    "6": {
-      titulo: "Star Wars: The Last Jedi",
-      ano: "2017",
-      genero: "Ação / Aventura",
-      duracao: "2h 32min",
-      nota: "7.0",
-      reviews: "6.7K",
-      imagem:
-        "https://lumiere-a.akamaihd.net/v1/images/sb_teaser2_1-sht_v3a_online_lg_44ecdb4e.jpeg",
-      descricao:
-        "Rey procura Luke Skywalker enquanto a Resistência enfrenta novos perigos durante a guerra contra a Primeira Ordem.",
-    },
-
-    "7": {
-      titulo: "Spiderman",
-      ano: "2002",
-      genero: "Ação / Aventura",
-      duracao: "2h 1min",
-      nota: "7.4",
-      reviews: "6.7K",
-      imagem:
-        "https://acdn-us.mitiendanube.com/stores/004/687/740/products/pos-01392-9512d27af47f9af48317181332018571-1024-1024.webp",
-      descricao:
-        "Depois de ser picado por uma aranha geneticamente modificada, Peter Parker ganha poderes e decide usá-los para proteger as pessoas.",
-    },
-
-    "8": {
-      titulo: "Red Notice",
-      ano: "2021",
-      genero: "Ação / Comédia",
-      duracao: "1h 58min",
-      nota: "6.3",
-      reviews: "6.7K",
-      imagem:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF6hOt4esl48VTYwseV3WAco0eUalJcWOOkarmtgcLuxUo3_PUaVsaO30&s=10",
-      descricao:
-        "Um agente do FBI precisa trabalhar ao lado de dois criminosos rivais para capturar um dos ladrões de arte mais procurados do mundo.",
-    },
-  };
-
-  const filme = FILMES[id as keyof typeof FILMES];
+  if (carregando) {
+    return null;
+  }
 
   if (!filme) {
     return (
@@ -160,19 +143,117 @@ export default function DetalhesFilme() {
     );
   }
 
+  const comprarIngressos = async () => {
+    // Verifica se todas as informações foram selecionadas
+    if (!tipoSelecionado) {
+      alert("Selecione o tipo de ingresso.");
+      return;
+    }
+
+    if (!horarioSelecionado) {
+      alert("Selecione um horário.");
+      return;
+    }
+
+    if (assentosSelecionados.length === 0) {
+      alert("Selecione pelo menos um assento.");
+      return;
+    }
+
+    setComprando(true);
+
+    const preco = tipoSelecionado === "Inteira" ? 30 : 15;
+    const assentosComprados: string[] = [];//guarda os assentos que ja estão ocupados
+
+    try {
+      // Envia um ingresso para cada assento selecionado
+      for (const assento of assentosSelecionados) {
+        const resposta = await fetch("http://localhost:5160/api/Ingresso", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idFilme: Number(id),
+            assento: assento,
+            tipoIngresso: tipoSelecionado,
+            preco: preco,
+            horarioSessao: `${horarioSelecionado}:00`,
+          }),
+        });
+
+        if (resposta.status === 409) {
+          throw new Error(
+            `O assento ${assento} já foi comprado por outra pessoa.`
+          );
+        }
+
+        if (!resposta.ok) {
+          throw new Error(
+            `Não foi possível comprar o assento ${assento}. Erro HTTP: ${resposta.status}.`
+          );
+        }
+
+        // Só registra na lista depois que o backend confirmar o POST
+        assentosComprados.push(assento);
+      }
+
+      // Atualiza os assentos ocupados na tela
+      setAssentosOcupados((anteriores) => [
+        ...anteriores,
+        ...assentosComprados,
+      ]);
+
+      setAssentosSelecionados([]);
+
+      alert("Compra realizada com sucesso!");
+      } catch (erro) {
+        console.error("Erro na compra:", erro);
+
+        // Mantém na tela os assentos que já foram comprados
+        if (assentosComprados.length > 0) {
+          setAssentosOcupados((anteriores) => [
+            ...anteriores,
+            ...assentosComprados,
+          ]);
+
+          setAssentosSelecionados((anteriores) =>
+            anteriores.filter(
+              (assento) => !assentosComprados.includes(assento)
+            )
+          );
+        }
+
+        const mensagem =
+          erro instanceof Error ? erro.message : "Erro ao realizar a compra.";
+
+        if (assentosComprados.length > 0) {
+          alert(
+            `${mensagem}\n\nAssentos já comprados: ${assentosComprados.join(", ")}.`
+          );
+        } else {
+          alert(mensagem);
+        }
+      } finally {
+      setComprando(false);
+    }
+  };
+
   return (
     <View style={[styles.tela, { backgroundColor: cor_principal }]}>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
 
         {/* IMAGEM DO FILME */}
         <View style={styles.containerImagem}>
 
-          <Image
-            source={{ uri: filme.imagem }}
-            style={styles.imagem}
-            resizeMode="cover"
-          />
+          {filme.urlImagem && (
+            <Image
+              source={{ uri: filme.urlImagem }}
+              style={styles.imagem}
+              resizeMode="cover"
+            />
+          )}
 
           {/* BOTÃO VOLTAR */}
           <TouchableOpacity
@@ -212,19 +293,13 @@ export default function DetalhesFilme() {
               {filme.titulo}
             </Text>
 
-            <View style={styles.imdb}>
-              <Text style={styles.textoImdb}>
-                IMDb {filme.nota}
-              </Text>
-            </View>
-
           </View>
 
           {/* INFORMAÇÕES */}
           <View style={styles.informacoes}>
 
             <Text style={styles.info}>
-              {filme.ano}
+              {filme.anoLancamento}
             </Text>
 
             <Text style={styles.ponto}>•</Text>
@@ -235,27 +310,7 @@ export default function DetalhesFilme() {
 
             <Text style={styles.ponto}>•</Text>
 
-            <Text style={styles.info}>
-              {filme.duracao}
-            </Text>
-
-          </View>
-
-          {/* AVALIAÇÃO */}
-          <View style={styles.avaliacao}>
-
-            {[1, 2, 3, 4, 5].map((item) => (
-              <Ionicons
-                key={item}
-                name="star"
-                size={18}
-                color="#FFD900"
-              />
-            ))}
-
-            <Text style={styles.reviews}>
-              {filme.reviews} reviews
-            </Text>
+            <Text style={styles.info}> {filme.duracao} min</Text>
 
           </View>
 
@@ -275,18 +330,168 @@ export default function DetalhesFilme() {
               { color: cor_secundaria + "90" },
             ]}
           >
-            {filme.descricao}
+            {filme.sinopse}
           </Text>
+
+          {/* COMPRA DE INGRESSOS */}
+          <View style={styles.secaoCompra}>
+
+            <Text style={[styles.tituloCompra, { color: cor_secundaria }]}>
+              Tipo do ingresso
+            </Text>
+
+            <View style={styles.linhaOpcoes}>
+              {(["Inteira", "Meia"] as const).map((tipo) => (
+                <TouchableOpacity
+                  key={tipo}
+                  style={[
+                    styles.opcaoCompra,
+                    tipoSelecionado === tipo && styles.opcaoAtiva,
+                  ]}
+                  onPress={() => setTipoSelecionado(tipo)}
+                >
+                  <Text
+                    style={[
+                      styles.textoOpcao,
+                      tipoSelecionado === tipo && styles.textoOpcaoAtiva,
+                    ]}
+                  >
+                    {tipo}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <Text style={[styles.tituloCompra, { color: cor_secundaria }]}>
+              Horários
+            </Text>
+
+            <View style={styles.linhaOpcoes}>
+              {horarios.map((horario) => (
+                <TouchableOpacity
+                  key={horario}
+                  style={[
+                    styles.opcaoCompra,
+                    horarioSelecionado === horario && styles.opcaoAtiva,
+                  ]}
+                  onPress={() => {
+                    setHorarioSelecionado(horario);
+                    setAssentosSelecionados([]);
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.textoOpcao,
+                      horarioSelecionado === horario && styles.textoOpcaoAtiva,
+                    ]}
+                  >
+                    {horario}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <Text style={[styles.tituloCompra, { color: cor_secundaria }]}>
+              Selecione seus assentos
+            </Text>
+
+            <View style={styles.legendaAssentos}>
+              <View style={styles.itemLegenda}>
+                <View style={styles.assentoLegenda} />
+                <Text style={styles.textoLegenda}>Disponíveis</Text>
+              </View>
+
+              <View style={styles.itemLegenda}>
+                <View style={[styles.assentoLegenda, styles.assentoOcupado]} />
+                <Text style={styles.textoLegenda}>Ocupados</Text>
+              </View>
+
+              <View style={styles.itemLegenda}>
+                <View style={[styles.assentoLegenda, styles.assentoSelecionado]} />
+                <Text style={styles.textoLegenda}>Selecionados</Text>
+              </View>
+            </View>
+
+            <View style={styles.telaCinema}>
+              <Text style={styles.textoTela}>TELA</Text>
+            </View>
+
+            {fileiras.map((fileira) => (
+              <View key={fileira} style={styles.fileiraAssentos}>
+                {Array.from({ length: quantidadeAssentos }, (_, index) => {
+                  const assento = `${fileira}${index + 1}`;
+                  const selecionado = assentosSelecionados.includes(assento);
+                  const ocupado = assentosOcupados.includes(assento);
+
+                  return (
+                    <TouchableOpacity
+                      key={assento}
+                      disabled={ocupado}
+                      style={[
+                        styles.assento,
+                        ocupado && styles.assentoOcupado,
+                        (index === 3 || index === 9) && styles.espacoCorredor,
+                        selecionado && styles.assentoSelecionado,
+                      ]}
+                      onPress={() => {
+                        if (ocupado) return;
+
+                        setAssentosSelecionados((anteriores) =>
+                          selecionado
+                            ? anteriores.filter((item) => item !== assento)
+                            : [...anteriores, assento]
+                        );
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.textoAssento,
+                          selecionado && styles.textoAssentoSelecionado,
+                        ]}
+                      >
+                        {assento}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ))}
+
+            {/* RESUMO DA COMPRA */}
+            <View style={styles.resumoCompra}>
+              <Text style={styles.tituloCompra}>Resumo da compra</Text>
+
+              <Text style={styles.textoResumo}>
+                Assentos: {assentosSelecionados.length > 0
+                  ? assentosSelecionados.join(", ")
+                  : "Nenhum"}
+              </Text>
+
+              <Text style={styles.textoResumo}>
+                Quantidade: {assentosSelecionados.length}
+              </Text>
+
+              <Text style={styles.textoResumo}>
+                Horário: {horarioSelecionado || "Não selecionado"}
+              </Text>
+
+              <Text style={styles.textoResumo}>
+                Total: R$ {total.toFixed(2).replace(".", ",")}
+              </Text>
+            </View>
 
           {/* BOTÕES */}
           <View style={styles.botoes}>
 
-            <TouchableOpacity
-              style={[
-                styles.botaoComprar,
-                { backgroundColor: cor_destaque },
-              ]}
-            >
+            {/* BOTÃO COMPRAR */}
+              <TouchableOpacity
+                style={[
+                  styles.botaoComprar,
+                  { backgroundColor: cor_destaque },
+                ]}
+                onPress={comprarIngressos}
+                disabled={comprando}
+              >
               <Ionicons
                 name="ticket-outline"
                 size={21}
@@ -299,11 +504,11 @@ export default function DetalhesFilme() {
                   { color: cor_secundaria },
                 ]}
               >
-                Comprar ingresso
+                {comprando ? "Processando..." : "Comprar ingresso"}
               </Text>
-
             </TouchableOpacity>
 
+            {/* BOTÃO FAVORITO */}
             <TouchableOpacity
               style={[
                 styles.botaoFavorito,
@@ -317,9 +522,11 @@ export default function DetalhesFilme() {
               />
             </TouchableOpacity>
 
-          </View>
+              </View>
 
-        </View>
+            </View>
+
+          </View>
 
       </ScrollView>
 
@@ -386,20 +593,6 @@ const styles = StyleSheet.create({
     fontFamily: "PoppinsBold",
   },
 
-  imdb: {
-    backgroundColor: "#FFD900",
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: 5,
-    marginLeft: 10,
-  },
-
-  textoImdb: {
-    color: "#1C1E1F",
-    fontSize: 10,
-    fontFamily: "PoppinsBold",
-  },
-
   informacoes: {
     flexDirection: "row",
     alignItems: "center",
@@ -416,19 +609,6 @@ const styles = StyleSheet.create({
   ponto: {
     color: "#838181",
     marginHorizontal: 7,
-  },
-
-  avaliacao: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 12,
-  },
-
-  reviews: {
-    color: "#F2F0EF80",
-    fontSize: 10,
-    fontFamily: "Poppins",
-    marginLeft: 8,
   },
 
   tituloSecao: {
@@ -488,6 +668,139 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 12,
     borderRadius: 8,
+  },
+
+  secaoCompra: {
+    marginTop: 35,
+    paddingTop: 25,
+    borderTopWidth: 1,
+    borderTopColor: "#444",
+  },
+
+  tituloCompra: {
+    fontSize: 18,
+    fontFamily: "PoppinsBold",
+    marginBottom: 15,
+  },
+
+  linhaOpcoes: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 25,
+  },
+
+  opcaoCompra: {
+    borderWidth: 1,
+    borderColor: "#777",
+    paddingVertical: 10,
+    paddingHorizontal: 22,
+    borderRadius: 8,
+  },
+
+  opcaoAtiva: {
+    backgroundColor: "#FF0000",
+    borderColor: "#FF0000",
+  },
+
+  textoOpcao: {
+    color: "#F2F0EF",
+    fontFamily: "PoppinsSemiBold",
+  },
+
+  textoOpcaoAtiva: {
+    color: "#F2F0EF",
+  },
+
+  legendaAssentos: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+
+  itemLegenda: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+
+  assentoLegenda: {
+    width: 16,
+    height: 16,
+    borderRadius: 4,
+    backgroundColor: "#777",
+  },
+
+  assentoOcupado: {
+    backgroundColor: "#444",
+  },
+
+  textoLegenda: {
+    color: "#F2F0EF90",
+    fontSize: 10,
+    fontFamily: "Poppins",
+  },
+
+  telaCinema: {
+    height: 35,
+    backgroundColor: "#777",
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 30,
+  },
+
+  textoTela: {
+    color: "#1C1E1F",
+    fontFamily: "PoppinsBold",
+    fontSize: 11,
+  },
+
+  fileiraAssentos: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 3,
+    marginBottom: 9,
+  },
+
+  assento: {
+    width: 23,
+    height: 27,
+    borderRadius: 5,
+    backgroundColor: "#777",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  assentoSelecionado: {
+    backgroundColor: "#FF0000",
+  },
+
+  textoAssento: {
+    color: "#F2F0EF",
+    fontSize: 9,
+  },
+
+  textoAssentoSelecionado: {
+    color: "#F2F0EF",
+  },
+
+  resumoCompra: {
+    marginTop: 30,
+    padding: 18,
+    backgroundColor: "#292B2C",
+    borderRadius: 10,
+    gap: 10,
+  },
+
+  textoResumo: {
+    color: "#F2F0EF",
+    fontSize: 12,
+    fontFamily: "Poppins",
+  },
+
+  espacoCorredor: {
+    marginLeft: 12,
   },
 
 });
