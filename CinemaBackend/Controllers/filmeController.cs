@@ -216,23 +216,55 @@ public class FilmeController : ControllerBase{
 
         connection.Open();
 
-        string sql = """
-            DELETE FROM FILMES
-            WHERE ID_FILMES = @idFilme;
-            """;
+        // Inicia uma transação para garantir que as duas exclusões
+        // sejam realizadas juntas.
+        using MySqlTransaction transaction = connection.BeginTransaction();
 
-        using MySqlCommand command =
-            new MySqlCommand(sql, connection);
-
-        command.Parameters.AddWithValue("@idFilme", idFilme);
-
-        int linhasDeletadas = command.ExecuteNonQuery();
-
-        if (linhasDeletadas == 0)
+        try
         {
-            return NotFound();
-        }
+            // Primeiro, exclui os ingressos vinculados ao filme.
+            string sqlIngressos = """
+                DELETE FROM INGRESSOS
+                WHERE ID_FILMES_FK = @idFilme;
+                """;
 
-        return Ok();
+            using MySqlCommand commandIngressos =
+                new MySqlCommand(sqlIngressos, connection, transaction);
+
+            commandIngressos.Parameters.AddWithValue("@idFilme", idFilme);
+
+            commandIngressos.ExecuteNonQuery();
+
+            // Depois, exclui o filme.
+            string sqlFilme = """
+                DELETE FROM FILMES
+                WHERE ID_FILMES = @idFilme;
+                """;
+
+            using MySqlCommand commandFilme =
+                new MySqlCommand(sqlFilme, connection, transaction);
+
+            commandFilme.Parameters.AddWithValue("@idFilme", idFilme);
+
+            int linhasDeletadas = commandFilme.ExecuteNonQuery();
+
+            // Se o filme não existir, desfaz as exclusões.
+            if (linhasDeletadas == 0)
+            {
+                transaction.Rollback();
+                return NotFound();
+            }
+
+            // Confirma as exclusões.
+            transaction.Commit();
+
+            return Ok();
+        }
+        catch
+        {
+            // Se acontecer algum erro, desfaz tudo.
+            transaction.Rollback();
+            throw;
+        }
     }
 }
